@@ -32,6 +32,35 @@ LP に必要なものと、管理画面に必要なものと、ネイティブ�
 `0-core` は**薄く保つ**。「本当に全対象で成り立つことだけ」を入れる。
 迷ったら対象フォルダ側に書く。core が太ると混在が始まる。
 
+### `0-core/` の中身
+
+| ファイル | 内容 |
+|---|---|
+| `principles.md` | Nielsen 10ヒューリスティクス、Hick / Fitts / Jakob 等の法則、認知負荷 |
+| `accessibility.md` | WCAG 2.2 の数値（4.5:1 / 24×24px / 320px / 200%）、セマンティクス、モーション |
+| `typography.md` | 日本語を含む文字設計。16px下限・行間1.5〜1.75・字間・和欧混植・禁則 |
+| `color-spacing.md` | 意味トークン設計、ダークモード、8pxグリッド、近接の原則 |
+| `implementation-checklist.md` | Web実装の通しチェック（Vercel WIG ベース＋日本語向け追記） |
+
+### `1-web-site/` の中身
+
+読む順番は上から。**構成 → 型 → 見た目 → 挙動 → 言葉 → 確認**。
+
+| ファイル | 内容 |
+|---|---|
+| `SCOPE.md` | 扱う範囲。LP と管理画面の前提差 |
+| `structure.md` | fold の実測値、セクション順序、視線、ナビ、メタ情報 |
+| `hero-cta.md` | ヒーローの10秒ルール、見出しの型、CTA の数と文言 |
+| `layout-patterns.md` | **セクション別レイアウト型カタログ**（図解＋Tailwind実装） |
+| `visual-design.md` | 「安っぽさ」の10症状と対処、階層、写真、影、色の面積 |
+| `responsive.md` | ブレークポイント、セクション組み替え、タッチ寸法、セーフエリア |
+| `motion.md` | 動きの既定値、使っていい動き／使わない動き、実装 |
+| `trust-btob.md` | 信頼を落とす要素→作る要素、背負えない表現の言い換え |
+| `ux-writing.md` | BtoB日本語の文言。見出し・削る技術・エラー・表記ルール |
+| `forms.md` | 項目削減、type/inputmode、バリデーション時機、完了画面 |
+| `performance.md` | Core Web Vitals、CLS対策、日本語フォントの重さ |
+| `launch-checklist.md` | 公開前の通し確認（表示/中身/A11y/性能/フォーム/SEO/法務） |
+
 ---
 
 ## 使い方
