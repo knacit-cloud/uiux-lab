@@ -1,0 +1,139 @@
+/* ==========================================================================
+   japanese-text.css — 日本語本文の基本設定
+   --------------------------------------------------------------------------
+   英語圏のテンプレートをそのまま使うと日本語で破綻する部分を潰す。
+   根拠: 0-core/typography.md（デジタル庁デザインシステム準拠）
+   ========================================================================== */
+
+/* --- フォント指定 ---------------------------------------------------------
+   欧文フォントを「先に」書く。順序が逆だと日本語フォントの従属欧文が使われ、
+   英数字が不格好になる。
+   -------------------------------------------------------------------------- */
+:root {
+  --font-sans:
+    'Inter',
+    -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
+    'Zen Kaku Gothic New', 'Noto Sans JP', 'Yu Gothic', Meiryo,
+    sans-serif;
+
+  --font-serif:
+    'Cormorant Garamond',
+    'Hiragino Mincho ProN', 'Shippori Mincho', 'Noto Serif JP', 'Yu Mincho',
+    serif;
+
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Consolas,
+    'Noto Sans Mono', monospace;
+}
+
+/* ⚠️ セレクタが :root なのは意図的（html ではない）
+   Tailwind CDN は preflight を「実行時に <style> として head の末尾へ」注入する。
+   <link> で読み込んだこのファイルは常にその手前に来るため、
+   html / body のような要素セレクタ（詳細度 0,0,1）では必ず負ける。
+   :root は擬似クラス（0,1,0）なので preflight より強い。
+   ※ ビルドして使う場合は @layer base に入れれば :root は不要。 */
+:root {
+  font-family: var(--font-sans);
+  line-height: 1.7;   /* Tailwind preflight の html{line-height:1.5} に勝つ */
+  /* 日本語のイタリック合成を防ぐ（真のイタリック字形が存在しないため） */
+  font-synthesis: weight;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* --- 本文 ------------------------------------------------------------------
+   16px 未満は使わない。行間は 1.5 が下限、読み物は 1.7 前後。
+   -------------------------------------------------------------------------- */
+/* body は通常の詳細度のまま。
+   ここを :root body に上げると .bg-* / .text-* ユーティリティを打ち消してしまう。
+   line-height は上の :root で継承させているのでここには書かない。 */
+body {
+  font-size: 1rem;        /* 16px。これを下回らせない */
+  letter-spacing: 0.02em; /* 小さいサイズほど字間を開ける */
+  color: var(--text-primary, #2E2A26);
+  background: var(--bg-page, #fff);
+}
+
+/* --- 折り返しと禁則 --------------------------------------------------------
+   word-break: break-all は日本語を単語の途中で無造作に折る。使わない。
+   -------------------------------------------------------------------------- */
+p, li, dd, td, th, figcaption, blockquote {
+  line-break: strict;        /* 禁則処理を厳格に */
+  word-break: normal;        /* break-all にしない */
+  overflow-wrap: anywhere;   /* 長い URL 等のはみ出しだけ防ぐ */
+}
+
+/* 最終行に単語が1つだけ残るのを防ぐ */
+p { text-wrap: pretty; }
+
+/* --- 見出し ----------------------------------------------------------------
+   大きい文字ほど字間を詰め、行間を狭くする。
+   -------------------------------------------------------------------------- */
+/* ⚠️ Tailwind と併用する場合の注意
+   Tailwind preflight は h1〜h6 の font-size / font-weight を inherit にリセットし、
+   それが実行時に後から注入されるため、ここの指定は打ち消される。
+   詳細度を :root h1 のように上げると今度は text-4xl などの
+   ユーティリティまで打ち消してしまうので、上げない。
+
+   → Tailwind を使うなら見出しサイズはユーティリティで指定する
+   → ビルドして使うなら、このブロックを @layer base に入れる
+   → Tailwind を使わない素の HTML では、そのまま効く              */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.4;
+  text-wrap: balance;   /* 行の長さを均等化。日本語の見出しで効く */
+  word-break: normal;
+  line-break: strict;
+}
+
+h1 { font-size: clamp(1.875rem, 6vw, 3.75rem); letter-spacing: 0;       line-height: 1.25; }
+h2 { font-size: clamp(1.5rem,  4vw, 2.25rem);  letter-spacing: 0.01em;  line-height: 1.35; }
+h3 { font-size: 1.25rem;                        letter-spacing: 0.02em; }
+
+/* 見出しは「直後の本文」に属する。上を広く、下を狭く。 */
+h2 { margin-block: 4rem 0.75rem; }
+h3 { margin-block: 2.5rem 0.5rem; }
+h2:first-child, h3:first-child { margin-block-start: 0; }
+
+/* --- 行長 ------------------------------------------------------------------
+   日本語 35〜45字。px ではなく em で指定する（拡大時も行長が保たれる）。
+   -------------------------------------------------------------------------- */
+.prose { max-width: var(--container-prose, 40em); }
+
+/* --- 数値 ------------------------------------------------------------------
+   縦に並ぶ数値は等幅にしないと桁が揃わず比較できない。
+   -------------------------------------------------------------------------- */
+.tabular,
+td.num, th.num,
+time, .price {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- 強調 ------------------------------------------------------------------
+   日本語にイタリック字形はない。<em> を斜体にせず、太字か色で表現する。
+   -------------------------------------------------------------------------- */
+:lang(ja) em,
+em:lang(ja) {
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* --- ルビ ------------------------------------------------------------------
+   ブラウザ既定は親文字の 50%。小さすぎることが多い。
+   -------------------------------------------------------------------------- */
+ruby > rt { font-size: 0.6em; }
+
+/* --- 入力欄 ----------------------------------------------------------------
+   iOS Safari は 16px 未満の入力欄でページを自動ズームする。
+   user-scalable=no で殺すのは WCAG 違反なので、font-size で対処する。
+   -------------------------------------------------------------------------- */
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: max(1rem, 16px);
+  line-height: 1.5;
+}
+
+/* --- ブランド名は翻訳させない ---------------------------------------------
+   HTML 側で <span translate="no">Knacit</span> と書く。
+   -------------------------------------------------------------------------- */
+[translate='no'] { font-feature-settings: normal; }

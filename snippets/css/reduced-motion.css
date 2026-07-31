@@ -1,0 +1,92 @@
+/* ==========================================================================
+   reduced-motion.css — 動きを減らす設定への対応
+   --------------------------------------------------------------------------
+   前庭障害のある人にとってアニメーションは実害になる。
+   これを入れないアニメーションは実装しない。
+
+   0-core/accessibility.md / 1-web-site/motion.md
+   ========================================================================== */
+
+/* --- 一括で止める ----------------------------------------------------------
+   完全に 0 にせず 0.01ms 残すのは、transitionend / animationend が
+   発火しなくなって JS が止まるのを防ぐため。
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* パララックスの類は無効化する */
+  [data-parallax] { transform: none !important; }
+}
+
+/* --- スムーススクロール ----------------------------------------------------
+   アンカーリンク用。reduced-motion 時は上のブロックで auto に戻る。
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ==========================================================================
+   スクロール連動の出現（scroll-reveal.js とセットで使う）
+   --------------------------------------------------------------------------
+   HTML:  <div data-reveal>…</div>
+   JS:    js/scroll-reveal.js を読み込む
+
+   重要: 初期状態の opacity:0 は .js が付いているときだけ効かせる。
+   これをやらないと JS が失敗したときにページが真っ白になる。
+   scroll-reveal.js が読み込み時に <html class="js"> を付ける。
+   ========================================================================== */
+
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);   /* 移動距離は 16px まで。大きいと読みづらい */
+  transition:
+    opacity   500ms var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform 500ms var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: opacity, transform;
+}
+
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;   /* 終わったら外す。付けっぱなしはメモリを食う */
+}
+
+/* 動きを減らす設定なら、最初から表示された状態にする */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   よく使う遷移のプリセット
+   transition: all は書かない。プロパティを列挙する。
+   ========================================================================== */
+
+.t-colors {
+  transition:
+    color            var(--duration-fast, 150ms) var(--ease-out, ease-out),
+    background-color var(--duration-fast, 150ms) var(--ease-out, ease-out),
+    border-color     var(--duration-fast, 150ms) var(--ease-out, ease-out);
+}
+
+.t-transform {
+  transition: transform var(--duration-base, 200ms) var(--ease-out, ease-out);
+}
+
+.t-fade {
+  transition: opacity var(--duration-base, 200ms) var(--ease-out, ease-out);
+}
+
+/* カードのホバー。持ち上げるのは 2px まで。scale は使わない（安っぽくなる） */
+.hover-lift { transition: transform var(--duration-base, 200ms) var(--ease-out, ease-out); }
+.hover-lift:hover { transform: translateY(-2px); }

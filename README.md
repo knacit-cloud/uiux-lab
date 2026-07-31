@@ -27,7 +27,17 @@ LP に必要なものと、管理画面に必要なものと、ネイティブ�
 | `2-web-app/` | ダッシュボード・管理画面（操作させる画面） | 🔲 SCOPE のみ |
 | `3-mobile/` | ネイティブアプリ（iOS / Android） | 🔲 SCOPE のみ |
 | `references/` | 出典台帳。一次資料へのリンクと検証状態 | ✅ 実装済み |
-| `snippets/` | コピペできる実装コード | 🔲 これから |
+| `snippets/` | コピペして動く実装（CSS / JS / HTML）＋ライブカタログ | ✅ 実装済み |
+
+### すぐ動かす
+
+```bash
+node .claude/server.js
+```
+
+→ http://localhost:4322/snippets/ が**ライブカタログ**。
+`1-web-site/layout-patterns.md` のセクション型が実際に動く状態で並んでいる。
+詳細は [snippets/README.md](snippets/README.md)。
 
 `0-core` は**薄く保つ**。「本当に全対象で成り立つことだけ」を入れる。
 迷ったら対象フォルダ側に書く。core が太ると混在が始まる。

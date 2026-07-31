@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Button — uiux-lab snippets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: { colors: {
+    ink: '#2E2A26', muted: '#736A60',
+    surface: '#FFFFFF', 'surface-2': '#F7F3EE', line: '#E0D7CB',
+    accent: '#C99A93', 'accent-deep': '#96685F',
+  }}}};
+</script>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/japanese-text.css">
+<link rel="stylesheet" href="../css/focus-ring.css">
+<link rel="stylesheet" href="../css/reduced-motion.css">
+</head>
+<body class="bg-surface-2 p-8">
+<div class="mx-auto max-w-3xl space-y-10">
+
+<h1 class="text-2xl font-bold text-ink">ボタン</h1>
+<p class="text-muted">Tab キーでフォーカスリングを確認してください。</p>
+
+<!-- ==================== COPY FROM HERE ==================== -->
+
+<!-- 主要アクション（遷移する = <a>） -->
+<a href="#diagnosis"
+   class="inline-flex min-h-[48px] items-center justify-center rounded-lg
+          bg-accent-deep px-6 font-medium text-white
+          transition-colors duration-150 ease-out
+          hover:bg-[#7D5650]
+          focus-visible:outline-none focus-visible:ring-2
+          focus-visible:ring-accent-deep focus-visible:ring-offset-2">
+  無料診断を申し込む
+</a>
+
+<!-- 副次アクション（輪郭線） -->
+<a href="#plans"
+   class="inline-flex min-h-[48px] items-center justify-center rounded-lg
+          border border-accent-deep px-6 font-medium text-accent-deep
+          transition-colors duration-150 ease-out
+          hover:bg-accent-deep/5
+          focus-visible:outline-none focus-visible:ring-2
+          focus-visible:ring-accent-deep focus-visible:ring-offset-2">
+  料金プランを見る
+</a>
+
+<!-- 3番目の導線はテキストリンクにする。同じ見た目のボタンを並べない -->
+<a href="#flow"
+   class="inline-flex min-h-[44px] items-center text-muted underline
+          underline-offset-4 hover:text-ink">
+  支援の流れを見る
+</a>
+
+<!-- 送信ボタン（スピナー付き）。js/form-validate.js が状態を切り替える -->
+<button type="submit"
+        class="inline-flex min-h-[48px] items-center justify-center gap-2
+               rounded-lg bg-accent-deep px-6 font-medium text-white
+               transition-colors duration-150 ease-out
+               hover:bg-[#7D5650] disabled:cursor-not-allowed disabled:opacity-70
+               focus-visible:outline-none focus-visible:ring-2
+               focus-visible:ring-accent-deep focus-visible:ring-offset-2">
+  <svg data-spinner hidden class="h-4 w-4 animate-spin" aria-hidden="true"
+       viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity=".25"/>
+    <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" stroke-width="3"
+          stroke-linecap="round"/>
+  </svg>
+  <span data-label>送信する</span>
+</button>
+
+<!-- アイコンのみ。aria-label が必須。44×44 を確保する -->
+<button type="button" aria-label="メニューを開く"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-lg
+               text-ink transition-colors duration-150 hover:bg-surface-2
+               focus-visible:outline-none focus-visible:ring-2
+               focus-visible:ring-accent-deep focus-visible:ring-offset-2">
+  <svg class="h-6 w-6" aria-hidden="true" viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" stroke-width="1.5">
+    <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/>
+  </svg>
+</button>
+
+<!-- ===================== COPY TO HERE ===================== -->
+
+<!-- ライブデモ -->
+<div class="space-y-8 rounded-xl border border-line bg-surface p-8">
+  <section>
+    <h2 class="mb-4 text-sm font-medium tracking-wider text-accent-deep">主要 / 副次 / 3番目</h2>
+    <div class="flex flex-wrap items-center gap-4">
+      <a href="#" class="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-accent-deep px-6 font-medium text-white transition-colors duration-150 ease-out hover:bg-[#7D5650] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2">無料診断を申し込む</a>
+      <a href="#" class="inline-flex min-h-[48px] items-center justify-center rounded-lg border border-accent-deep px-6 font-medium text-accent-deep transition-colors duration-150 ease-out hover:bg-accent-deep/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2">料金プランを見る</a>
+      <a href="#" class="inline-flex min-h-[44px] items-center text-muted underline underline-offset-4 hover:text-ink">支援の流れを見る</a>
+    </div>
+    <p class="mt-4 text-sm text-muted">所要3分・費用はかかりません</p>
+  </section>
+
+  <section>
+    <h2 class="mb-4 text-sm font-medium tracking-wider text-accent-deep">送信中の状態</h2>
+    <div class="flex flex-wrap items-center gap-4">
+      <button type="button" id="demoSubmit"
+              class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg bg-accent-deep px-6 font-medium text-white transition-colors duration-150 ease-out hover:bg-[#7D5650] disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2">
+        <svg data-spinner hidden class="h-4 w-4 animate-spin" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity=".25"/>
+          <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span data-label>押すと2秒間 送信中になります</span>
+      </button>
+      <button type="button" aria-label="メニューを開く"
+              class="inline-flex h-11 w-11 items-center justify-center rounded-lg text-ink transition-colors duration-150 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2">
+        <svg class="h-6 w-6" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <section class="on-dark rounded-lg bg-accent-deep p-6">
+    <h2 class="mb-4 text-sm font-medium tracking-wider text-white/80">濃い背景の上</h2>
+    <a href="#" class="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-white px-6 font-medium text-accent-deep transition-colors duration-150 hover:bg-white/90">
+      無料診断を申し込む
+    </a>
+    <p class="mt-3 text-sm text-white/70">Tab で移動するとリングが白になります</p>
+  </section>
+</div>
+
+<div class="rounded-xl border border-line bg-surface p-6 text-sm leading-relaxed text-muted">
+  <p class="mb-2 font-medium text-ink">チェックポイント</p>
+  <ul class="list-disc space-y-1 pl-5">
+    <li>高さ 48px（タップ領域 44×44 以上）</li>
+    <li>hover と focus-visible の両方がある</li>
+    <li>transition はプロパティを列挙（<code>all</code> ではない）</li>
+    <li>遷移は <code>&lt;a&gt;</code>、送信は <code>&lt;button type="submit"&gt;</code></li>
+    <li>背景 #96685F ＋白文字 = 約 4.7:1（AA 合格）。#A9786F は 3.75:1 で不足</li>
+    <li>同じ見た目のボタンを2つ並べない（Hick の法則）</li>
+  </ul>
+</div>
+
+</div>
+
+<script>
+  document.getElementById('demoSubmit').addEventListener('click', function () {
+    var btn = this;
+    var sp = btn.querySelector('[data-spinner]');
+    var lb = btn.querySelector('[data-label]');
+    var original = lb.textContent;
+    btn.disabled = true; sp.hidden = false; lb.textContent = '送信中…';
+    setTimeout(function () {
+      btn.disabled = false; sp.hidden = true; lb.textContent = original;
+    }, 2000);
+  });
+</script>
+</body>
+</html>

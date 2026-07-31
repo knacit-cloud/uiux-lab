@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact Form — uiux-lab snippets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: { colors: {
+    ink: '#2E2A26', muted: '#736A60',
+    surface: '#FFFFFF', 'surface-2': '#F7F3EE', line: '#E0D7CB',
+    accent: '#C99A93', 'accent-deep': '#96685F', danger: '#A63A32',
+  }}}};
+</script>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/japanese-text.css">
+<link rel="stylesheet" href="../css/focus-ring.css">
+<link rel="stylesheet" href="../css/reduced-motion.css">
+</head>
+<body class="bg-surface-2 p-8">
+<div class="mx-auto max-w-2xl space-y-10">
+
+<h1 class="text-2xl font-bold text-ink">問い合わせフォーム</h1>
+<p class="text-muted">
+  空のまま送信 / 不正なメールアドレス / 全角入力 を試してください。
+</p>
+
+<!-- ==================== COPY FROM HERE ==================== -->
+
+<form data-validate data-ajax action="/api/contact" method="post"
+      class="space-y-6 rounded-xl border border-line bg-surface p-6 md:p-8">
+
+  <!-- 送信結果の通知。非同期更新なので aria-live が必要 -->
+  <p data-form-status hidden role="status" aria-live="polite"
+     class="rounded-lg bg-surface-2 px-4 py-3 text-sm text-ink
+            [&.is-error]:bg-danger/10 [&.is-error]:text-danger"></p>
+
+  <!-- 会社名 -->
+  <div>
+    <label for="company" class="mb-2 block text-sm font-medium text-ink">
+      会社名 <span class="text-danger">必須</span>
+    </label>
+    <input id="company" name="company" type="text" required
+           autocomplete="organization"
+           placeholder="株式会社◯◯"
+           class="w-full min-h-[48px] rounded-lg border border-line bg-surface px-4
+                  text-ink placeholder:text-muted/60
+                  aria-[invalid=true]:border-danger
+                  focus-visible:outline-none focus-visible:ring-2
+                  focus-visible:ring-accent-deep">
+    <p id="company-error" class="field-error mt-2 text-sm text-danger" hidden></p>
+  </div>
+
+  <!-- 氏名 -->
+  <div>
+    <label for="name" class="mb-2 block text-sm font-medium text-ink">
+      お名前 <span class="text-danger">必須</span>
+    </label>
+    <input id="name" name="name" type="text" required
+           autocomplete="name"
+           placeholder="山田 太郎"
+           class="w-full min-h-[48px] rounded-lg border border-line bg-surface px-4
+                  text-ink placeholder:text-muted/60
+                  aria-[invalid=true]:border-danger
+                  focus-visible:outline-none focus-visible:ring-2
+                  focus-visible:ring-accent-deep">
+    <p id="name-error" class="field-error mt-2 text-sm text-danger" hidden></p>
+  </div>
+
+  <!-- メール：type / inputmode / autocomplete / spellcheck をすべて指定する -->
+  <div>
+    <label for="email" class="mb-2 block text-sm font-medium text-ink">
+      メールアドレス <span class="text-danger">必須</span>
+    </label>
+    <input id="email" name="email" type="email" required
+           autocomplete="email" inputmode="email" spellcheck="false"
+           placeholder="example@company.co.jp"
+           class="w-full min-h-[48px] rounded-lg border border-line bg-surface px-4
+                  text-ink placeholder:text-muted/60
+                  aria-[invalid=true]:border-danger
+                  focus-visible:outline-none focus-visible:ring-2
+                  focus-visible:ring-accent-deep">
+    <p class="mt-2 text-sm text-muted">全角で入力しても自動で半角に直します。</p>
+    <p id="email-error" class="field-error mt-2 text-sm text-danger" hidden></p>
+  </div>
+
+  <!-- 電話：多くの場合は不要。聞くなら任意にする -->
+  <div>
+    <label for="tel" class="mb-2 block text-sm font-medium text-ink">
+      電話番号 <span class="font-normal text-muted">任意</span>
+    </label>
+    <input id="tel" name="tel" type="tel"
+           autocomplete="tel" inputmode="tel" spellcheck="false"
+           placeholder="09012345678"
+           class="w-full min-h-[48px] rounded-lg border border-line bg-surface px-4
+                  text-ink placeholder:text-muted/60
+                  aria-[invalid=true]:border-danger
+                  focus-visible:outline-none focus-visible:ring-2
+                  focus-visible:ring-accent-deep">
+    <p class="mt-2 text-sm text-muted">ハイフンはあってもなくても構いません。</p>
+    <p id="tel-error" class="field-error mt-2 text-sm text-danger" hidden></p>
+  </div>
+
+  <!-- 相談内容：必須にしない -->
+  <div>
+    <label for="message" class="mb-2 block text-sm font-medium text-ink">
+      ご相談内容 <span class="font-normal text-muted">任意</span>
+    </label>
+    <textarea id="message" name="message" rows="5"
+              placeholder="いま困っていることを、分かる範囲で構いません…"
+              class="w-full rounded-lg border border-line bg-surface px-4 py-3
+                     text-ink placeholder:text-muted/60
+                     aria-[invalid=true]:border-danger
+                     focus-visible:outline-none focus-visible:ring-2
+                     focus-visible:ring-accent-deep"></textarea>
+    <p id="message-error" class="field-error mt-2 text-sm text-danger" hidden></p>
+  </div>
+
+  <!-- 同意：ラベル全体が単一のヒット領域になるよう <label> で包む -->
+  <div>
+    <label class="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-ink">
+      <!-- ラップ型の label はエラー文に流用できないので短い名前を渡す -->
+      <input id="agree" name="agree" type="checkbox" required
+             data-error-label="プライバシーポリシー"
+             class="mt-1 h-5 w-5 shrink-0 rounded border-line
+                    focus-visible:outline-none focus-visible:ring-2
+                    focus-visible:ring-accent-deep focus-visible:ring-offset-2">
+      <span>
+        <a href="/privacy" class="text-accent-deep underline underline-offset-2">プライバシーポリシー</a>
+        に同意する
+      </span>
+    </label>
+    <p id="agree-error" class="field-error mt-2 text-sm text-danger" hidden></p>
+  </div>
+
+  <!-- 送信 -->
+  <div class="pt-2">
+    <button type="submit"
+            class="inline-flex w-full min-h-[52px] items-center justify-center gap-2
+                   rounded-lg bg-accent-deep px-6 font-medium text-white
+                   transition-colors duration-150 ease-out hover:bg-[#7D5650]
+                   disabled:cursor-not-allowed disabled:opacity-70
+                   focus-visible:outline-none focus-visible:ring-2
+                   focus-visible:ring-accent-deep focus-visible:ring-offset-2 sm:w-auto">
+      <svg data-spinner hidden class="h-4 w-4 animate-spin" aria-hidden="true"
+           viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity=".25"/>
+        <path d="M22 12a10 10 0 0 1-10 10" stroke="currentColor" stroke-width="3"
+              stroke-linecap="round"/>
+      </svg>
+      <span data-label>無料診断を申し込む</span>
+    </button>
+    <p class="mt-3 text-sm text-muted">
+      所要3分・費用はかかりません・送信後、確認メールが届きます
+    </p>
+  </div>
+</form>
+
+<script src="../js/form-validate.js" defer></script>
+
+<!-- ===================== COPY TO HERE ===================== -->
+
+<div class="rounded-xl border border-line bg-surface p-6 text-sm leading-relaxed text-muted">
+  <p class="mb-2 font-medium text-ink">設計メモ</p>
+  <ul class="list-disc space-y-1 pl-5">
+    <li><strong>項目は5つ。</strong>部署・役職・住所・従業員数は聞いていない</li>
+    <li>電話番号は任意（必須にすると「電話が来る」と思われて離脱する）</li>
+    <li>プレースホルダをラベル代わりにしない。ラベルは入力欄の上</li>
+    <li>「必須」と書く（<code>*</code> だけに頼らない）</li>
+    <li><code>type</code> / <code>inputmode</code> / <code>autocomplete</code> を全部指定 → モバイルで正しいキーボードが出る</li>
+    <li>入力欄の font-size は 16px 以上（iOS の自動ズーム防止）</li>
+    <li>エラーは該当欄の直下にインライン表示。<code>aria-describedby</code> で紐付け</li>
+    <li>入力中はエラーを出さない。blur で検証、直ったら即消す</li>
+    <li>送信時は<strong>最初のエラー欄にフォーカスを移す</strong></li>
+    <li>全角入力は弾かずに自動で半角へ正規化（ポステルの法則）</li>
+    <li><strong>ペーストを妨害しない</strong></li>
+    <li>失敗しても入力内容を消さない</li>
+  </ul>
+  <p class="mt-4">
+    <code>data-ajax</code> を外すと通常の POST 送信になります（JS なしでも動く）。
+  </p>
+</div>
+
+</div>
+</body>
+</html>

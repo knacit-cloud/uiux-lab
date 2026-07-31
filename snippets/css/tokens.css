@@ -1,0 +1,186 @@
+/* ==========================================================================
+   tokens.css — 色・余白・角丸・影の意味トークン
+   --------------------------------------------------------------------------
+   使い方:
+     <link rel="stylesheet" href="css/tokens.css">
+     色は必ずこのファイル経由で使う。HTML に hex を直書きしない。
+
+   構造:
+     原子トークン (--c-*)   … 色そのもの。直接使わない
+     意味トークン (--text-*, --bg-*, --border-*, --action-*) … 実際に使うのはこっち
+
+   意味トークンを挟むと、ダークモードとブランド変更が
+   「変数の差し替え」だけで済む。
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- 原子トークン ------------------------------------------------------ */
+  /* 差し替えるのはここだけ。下の意味トークンは触らない */
+
+  /* Neutral（暖色寄り。純黒・純白を避ける） */
+  --c-neutral-0:   #FFFFFF;
+  --c-neutral-50:  #FAF8F5;
+  --c-neutral-100: #F7F3EE;
+  --c-neutral-200: #EFE9E1;
+  --c-neutral-300: #E0D7CB;
+  --c-neutral-400: #C4B8A9;
+  --c-neutral-500: #948878;
+  --c-neutral-600: #736A60;
+  --c-neutral-700: #574F47;
+  --c-neutral-800: #3D3833;
+  --c-neutral-900: #2E2A26;
+
+  /* Primary（rose） */
+  --c-primary-200: #E8CFCB;
+  --c-primary-300: #D9AFA8;
+  --c-primary-400: #C99A93;
+  --c-primary-500: #A9786F;
+  --c-primary-600: #96685F;   /* ← 白文字を載せる用。下の注記を読むこと */
+  --c-primary-700: #7D5650;
+
+  /* Semantic */
+  --c-success:  #4B7A52;
+  --c-warning:  #9A6B24;
+  --c-error:    #A63A32;
+  --c-info:     #5A7F91;
+
+  /* --- 意味トークン（実際に使うのはこっち） ------------------------------ */
+  --text-primary:    var(--c-neutral-900);
+  --text-secondary:  var(--c-neutral-700);
+  --text-muted:      var(--c-neutral-600);
+  --text-on-accent:  var(--c-neutral-0);
+  --text-link:       var(--c-primary-600);
+
+  --bg-page:         var(--c-neutral-0);
+  --bg-surface:      var(--c-neutral-0);
+  --bg-surface-2:    var(--c-neutral-100);
+  --bg-surface-3:    var(--c-neutral-200);
+
+  --border-default:  var(--c-neutral-300);
+  --border-subtle:   var(--c-neutral-200);
+  --border-strong:   var(--c-neutral-400);
+
+  --action-primary:        var(--c-primary-600);
+  --action-primary-hover:  var(--c-primary-700);
+  --action-accent:         var(--c-primary-500);
+
+  --focus-ring:      var(--c-primary-600);
+
+  /* --- 余白（8px 基準） --------------------------------------------------- */
+  --space-1:  0.25rem;  /*  4px  微調整のみ */
+  --space-2:  0.5rem;   /*  8px  要素内部 */
+  --space-3:  0.75rem;  /* 12px */
+  --space-4:  1rem;     /* 16px  関連要素間 */
+  --space-6:  1.5rem;   /* 24px  グループ間 */
+  --space-8:  2rem;     /* 32px */
+  --space-12: 3rem;     /* 48px  セクション内の区切り */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px  セクション間（モバイル） */
+  --space-28: 7rem;     /* 112px セクション間（デスクトップ） */
+
+  /* --- 角丸（3種まで） ---------------------------------------------------- */
+  --radius-sm:   0.5rem;   /*  8px  ボタン・入力欄 */
+  --radius-md:   0.75rem;  /* 12px  カード */
+  --radius-lg:   1rem;     /* 16px  大きいパネル */
+  --radius-full: 9999px;
+
+  /* --- 影（薄く・大きく・2枚重ね。黒ではなく暖色の濃色を使う） ------------ */
+  --shadow-sm: 0 1px 2px rgba(46, 42, 38, 0.04),
+               0 2px 6px  rgba(46, 42, 38, 0.05);
+  --shadow-md: 0 1px 2px rgba(46, 42, 38, 0.04),
+               0 4px 12px rgba(46, 42, 38, 0.07);
+  --shadow-lg: 0 2px 4px  rgba(46, 42, 38, 0.05),
+               0 12px 32px rgba(46, 42, 38, 0.10);
+
+  /* --- モーション --------------------------------------------------------- */
+  --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 250ms;
+
+  /* --- レイアウト --------------------------------------------------------- */
+  --container:      72rem;  /* 1152px 一般 */
+  --container-prose: 40em;  /* 読み物。em なので拡大時も行長が保たれる */
+}
+
+/* ==========================================================================
+   ダークモード
+   明るい色の反転ではない。彩度を落とし、純黒を避け、明度で高さを表現する。
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-primary:   #F0EBE5;
+    --text-secondary: #CFC5BA;
+    --text-muted:     #A79C90;
+    --text-on-accent: #1A1715;
+    --text-link:      var(--c-primary-300);
+
+    --bg-page:        #1A1715;
+    --bg-surface:     #211D1A;
+    --bg-surface-2:   #262220;
+    --bg-surface-3:   #302B27;
+
+    --border-default: #3A3430;
+    --border-subtle:  #2E2A26;
+    --border-strong:  #4A423C;
+
+    /* 暗背景では明るいアクセント＋濃い文字。逆にするとコントラストが足りない */
+    --action-primary:       var(--c-primary-300);
+    --action-primary-hover: var(--c-primary-200);
+    --focus-ring:           var(--c-primary-300);
+  }
+}
+
+/* 手動トグル用（<html data-theme="dark"> を JS で付ける） */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --text-primary:   #F0EBE5;
+  --text-secondary: #CFC5BA;
+  --text-muted:     #A79C90;
+  --text-on-accent: #1A1715;
+  --text-link:      var(--c-primary-300);
+  --bg-page:        #1A1715;
+  --bg-surface:     #211D1A;
+  --bg-surface-2:   #262220;
+  --bg-surface-3:   #302B27;
+  --border-default: #3A3430;
+  --border-subtle:  #2E2A26;
+  --border-strong:  #4A423C;
+  --action-primary:       var(--c-primary-300);
+  --action-primary-hover: var(--c-primary-200);
+  --focus-ring:           var(--c-primary-300);
+}
+:root[data-theme='light'] { color-scheme: light; }
+
+/* ==========================================================================
+   ⚠️ コントラストに関する注記（実測値・2026-07-31）
+
+   ブランドの rose-deep #A9786F に白文字を載せると、
+   コントラスト比は約 3.75:1。
+
+     ・大きい文字（18pt以上 / 太字14pt以上） … 3:1 で OK ✓
+     ・通常テキスト（ボタンラベル 16px 等）  … 4.5:1 必要 ✗ 不足
+
+   そのため塗りつぶしボタン用に #96685F（白文字で約 4.7:1）を
+   --c-primary-600 として用意し、--action-primary に割り当てている。
+   #A9786F は --action-accent として、大きい見出しや装飾に使う。
+
+   ※ 既存サイトで #A9786F ボタン＋白文字を使っている箇所があれば
+     要確認。数値は sRGB の相対輝度から算出（WCAG 2.x の定義）。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Tailwind を使う場合は tailwind.config でこれらを参照する:
+
+   theme: { extend: { colors: {
+     ink:       'var(--text-primary)',
+     muted:     'var(--text-muted)',
+     surface:   'var(--bg-surface)',
+     'surface-2': 'var(--bg-surface-2)',
+     line:      'var(--border-default)',
+     accent:      'var(--action-accent)',
+     'accent-deep': 'var(--action-primary)',
+   }}}
+   -------------------------------------------------------------------------- */

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FAQ — uiux-lab snippets</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: { colors: {
+    ink: '#2E2A26', muted: '#736A60',
+    surface: '#FFFFFF', 'surface-2': '#F7F3EE', line: '#E0D7CB',
+    accent: '#C99A93', 'accent-deep': '#96685F',
+  }}}};
+</script>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/japanese-text.css">
+<link rel="stylesheet" href="../css/focus-ring.css">
+<link rel="stylesheet" href="../css/reduced-motion.css">
+<style>
+  /* ▶ マーカーを消す（Safari は ::-webkit-details-marker も必要） */
+  summary { list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+
+  /* 高さのアニメーション。height:auto は遷移できないので grid で行う */
+  details .answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  details[open] .answer { grid-template-rows: 1fr; }
+  details .answer > div { overflow: hidden; }
+
+  @media (prefers-reduced-motion: reduce) {
+    details .answer { transition: none; }
+  }
+</style>
+</head>
+<body class="bg-surface-2 p-8">
+<div class="mx-auto max-w-3xl space-y-10">
+
+<h1 class="text-2xl font-bold text-ink">FAQ（アコーディオン）</h1>
+<p class="text-muted">
+  JS ゼロ。キーボード操作が標準で効き、閉じていても DOM に存在するので検索エンジンに読まれます。
+</p>
+
+<!-- ==================== COPY FROM HERE ==================== -->
+
+<section class="py-8">
+  <div class="mx-auto max-w-3xl">
+    <h2 class="mb-8 font-serif text-3xl text-ink">よくあるご質問</h2>
+
+    <div class="divide-y divide-line border-y border-line">
+
+      <details class="group py-1">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 py-4
+                        font-medium text-ink
+                        focus-visible:outline-none focus-visible:ring-2
+                        focus-visible:ring-accent-deep focus-visible:ring-offset-4">
+          <span>途中でやめることはできますか？</span>
+          <svg class="h-5 w-5 shrink-0 text-muted transition-transform duration-200
+                      group-open:rotate-45"
+               aria-hidden="true" viewBox="0 0 20 20" fill="none"
+               stroke="currentColor" stroke-width="1.5">
+            <path d="M10 4v12M4 10h12" stroke-linecap="round"/>
+          </svg>
+        </summary>
+        <div class="answer">
+          <div>
+            <p class="pb-5 leading-relaxed text-muted">
+              いつでも解約できます。前払いいただいた分の未消化期間については、
+              日割りでご返金します。違約金はいただきません。
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <details class="group py-1">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 py-4
+                        font-medium text-ink
+                        focus-visible:outline-none focus-visible:ring-2
+                        focus-visible:ring-accent-deep focus-visible:ring-offset-4">
+          <span>料金はどのように決まりますか？</span>
+          <svg class="h-5 w-5 shrink-0 text-muted transition-transform duration-200
+                      group-open:rotate-45"
+               aria-hidden="true" viewBox="0 0 20 20" fill="none"
+               stroke="currentColor" stroke-width="1.5">
+            <path d="M10 4v12M4 10h12" stroke-linecap="round"/>
+          </svg>
+        </summary>
+        <div class="answer">
+          <div>
+            <p class="pb-5 leading-relaxed text-muted">
+              月額2万円から始められます。金額は、扱う課題の数とミーティングの頻度で変わります。
+              無料診断のあとに、具体的な金額をお見積りします。
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <details class="group py-1">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 py-4
+                        font-medium text-ink
+                        focus-visible:outline-none focus-visible:ring-2
+                        focus-visible:ring-accent-deep focus-visible:ring-offset-4">
+          <span>何を準備すればいいですか？</span>
+          <svg class="h-5 w-5 shrink-0 text-muted transition-transform duration-200
+                      group-open:rotate-45"
+               aria-hidden="true" viewBox="0 0 20 20" fill="none"
+               stroke="currentColor" stroke-width="1.5">
+            <path d="M10 4v12M4 10h12" stroke-linecap="round"/>
+          </svg>
+        </summary>
+        <div class="answer">
+          <div>
+            <p class="pb-5 leading-relaxed text-muted">
+              準備は不要です。診断フォームに、いま困っていることを分かる範囲で書いていただければ始められます。
+            </p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COPY TO HERE ===================== -->
+
+<div class="rounded-xl border border-line bg-surface p-6 text-sm leading-relaxed text-muted">
+  <p class="mb-2 font-medium text-ink">設計メモ</p>
+  <ul class="list-disc space-y-1 pl-5">
+    <li><code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> なので JS 不要。Enter / Space で開閉できる</li>
+    <li>閉じていても DOM に存在する（<code>display:none</code> にしない）→ 検索エンジンに読まれる</li>
+    <li>アイコンは <code>group-open:rotate-45</code> で ＋ → × に変わる</li>
+    <li>高さは <code>grid-template-rows: 0fr → 1fr</code> で遷移（<code>height:auto</code> は遷移できない）</li>
+    <li>複数を同時に開ける。1つずつにしたいなら <code>name</code> 属性で排他にできる（対応ブラウザ限定）</li>
+    <li>FAQ は「よくある質問」ではなく<strong>購入直前の懸念を潰す場所</strong>。商談で実際に聞かれることを書く</li>
+    <li>構造化データ <code>FAQPage</code> を入れると検索結果に出る可能性がある（html/meta-head.html 参照）</li>
+  </ul>
+</div>
+
+</div>
+</body>
+</html>

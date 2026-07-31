@@ -1,0 +1,80 @@
+/* ==========================================================================
+   focus-ring.css — フォーカス表示の共通スタイル
+   --------------------------------------------------------------------------
+   WCAG 2.1.1（キーボード操作）/ 2.4.11（フォーカスが隠れない）対応。
+
+   ルール:
+     ・:focus ではなく :focus-visible を使う
+       → マウスクリック時にリングが出ない。キーボード操作時だけ出る
+     ・outline: none を書くなら、必ず代替の見た目を用意する
+     ・リングは背景とのコントラスト 3:1 以上
+   ========================================================================== */
+
+/* --- 全体の既定 ------------------------------------------------------------
+   まず全部に付ける。個別に上書きする方が事故が少ない。
+   -------------------------------------------------------------------------- */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus-ring, #96685F);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm, 0.5rem);
+}
+
+/* マウスクリック時のリングを消す（:focus-visible が効かない古い環境向け保険） */
+:where(a, button, summary):focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* --- 濃い背景の上 ----------------------------------------------------------
+   CTA バンドなど。リングを白にしないと背景に埋もれる。
+   使い方: <section class="on-dark"> … </section>
+   -------------------------------------------------------------------------- */
+.on-dark :where(a, button, input, summary):focus-visible {
+  outline-color: #fff;
+  outline-offset: 3px;
+}
+
+/* --- 複合部品 --------------------------------------------------------------
+   入力欄＋ボタンが一体になっている検索フォームなど。
+   内側の要素にフォーカスが入ったら、外枠全体を光らせる。
+   -------------------------------------------------------------------------- */
+.field-group:focus-within {
+  outline: 2px solid var(--focus-ring, #96685F);
+  outline-offset: 2px;
+}
+.field-group:focus-within :focus-visible {
+  outline: none;   /* 二重にリングが出るのを防ぐ */
+}
+
+/* --- 固定ヘッダー対策 ------------------------------------------------------
+   WCAG 2.4.11: フォーカス中の要素が他の要素に完全に隠れてはいけない。
+   固定ヘッダーの下にフォーカス要素が潜り込む事故を防ぐ。
+   値はヘッダーの高さ + 余白に合わせて調整する。
+   -------------------------------------------------------------------------- */
+:root { --header-height: 4rem; }
+
+[id],
+:target {
+  scroll-margin-top: calc(var(--header-height) + 1rem);
+}
+
+/* --- スキップリンク --------------------------------------------------------
+   ページ先頭に置く。Tab を1回押すと現れて、本文へ飛べる。
+   使い方: <a href="#main" class="skip-link">本文へスキップ</a>
+   -------------------------------------------------------------------------- */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-surface, #fff);
+  color: var(--text-primary, #2E2A26);
+  border-radius: 0 0 var(--radius-sm, 0.5rem) var(--radius-sm, 0.5rem);
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,.08));
+  /* 画面外に隠す。display:none だとフォーカスできないので transform を使う */
+  transform: translateY(-120%);
+  transition: transform var(--duration-fast, 150ms) var(--ease-out, ease-out);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}

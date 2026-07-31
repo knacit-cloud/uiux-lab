@@ -1,0 +1,103 @@
+<!-- ==========================================================================
+     meta-head.html — <head> のテンプレート
+     --------------------------------------------------------------------------
+     ページごとに書き換える箇所は {{ }} で示している。
+     1-web-site/structure.md / launch-checklist.md
+     ========================================================================== -->
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- viewport-fit=cover を書かないと env(safe-area-inset-*) が 0 になる -->
+<!-- user-scalable=no / maximum-scale=1 は書かない（WCAG違反） -->
+
+<!-- ===== 基本 ============================================================ -->
+<title>{{ページ固有のタイトル｜キーワードを前に・60字目安}} | {{サイト名}}</title>
+<meta name="description" content="{{120字前後。検索結果に出る営業文。ページごとに変える}}">
+<link rel="canonical" href="https://example.com{{/path}}">
+
+<!-- ===== OGP（SNS で共有されたときの見た目）============================== -->
+<meta property="og:type"        content="website">
+<!-- 記事ページなら article。トップは website -->
+<meta property="og:url"         content="https://example.com{{/path}}">
+<meta property="og:title"       content="{{タイトル｜「| サイト名」は不要な場合が多い}}">
+<meta property="og:description" content="{{説明文}}">
+<meta property="og:site_name"   content="{{サイト名}}">
+<meta property="og:locale"      content="ja_JP">
+<!-- 画像は 1200×630px。絶対URL。テキストを入れるなら大きめに -->
+<meta property="og:image"        content="https://example.com/images/ogp.png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt"    content="{{画像の説明}}">
+
+<!-- ===== Twitter / X ===================================================== -->
+<meta name="twitter:card" content="summary_large_image">
+<!-- 画像を大きく出す。summary だと小さい正方形になる -->
+
+<!-- ===== アイコン ======================================================== -->
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!-- 180×180px -->
+
+<!-- ===== テーマ色（ブラウザUIの色。背景色と合わせる）===================== -->
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1A1715" media="(prefers-color-scheme: dark)">
+
+<!-- ===== パフォーマンス ================================================== -->
+<!-- 外部ドメインへの接続を先に張る -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- 重要なフォントだけ preload。全部やると逆に遅くなる -->
+<link rel="preload" as="font" type="font/woff2"
+      href="/fonts/inter-subset.woff2" crossorigin>
+
+<!-- ===== スタイル ======================================================== -->
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/japanese-text.css">
+<link rel="stylesheet" href="/css/focus-ring.css">
+<link rel="stylesheet" href="/css/reduced-motion.css">
+
+<!-- ===== 構造化データ ==================================================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "{{会社名}}",
+  "url": "https://example.com",
+  "logo": "https://example.com/images/logo.png",
+  "description": "{{事業内容}}",
+  "address": {
+    "@type": "PostalAddress",
+    "addressRegion": "{{都道府県}}",
+    "addressCountry": "JP"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "email": "hello@example.com",
+    "availableLanguage": ["ja"]
+  }
+}
+</script>
+
+<!-- FAQ ページなら追加する。検索結果にQ&Aが出る可能性がある
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "途中でやめることはできますか？",
+    "acceptedAnswer": { "@type": "Answer", "text": "いつでも解約できます。" }
+  }]
+}
+</script>
+-->
+
+<!-- ==========================================================================
+     公開前チェック（launch-checklist.md より抜粋）
+       □ title / description がページごとに固有か
+       □ og:image が 1200×630px の絶対URLか
+       □ canonical が正しいか
+       □ 実際に Slack / LINE に貼ってカードの見た目を確認したか
+       □ theme-color が実際の背景色と一致しているか
+     ========================================================================== -->
