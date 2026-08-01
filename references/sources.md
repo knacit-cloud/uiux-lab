@@ -30,6 +30,7 @@
 | 9 | web.dev — Web Vitals | https://web.dev/articles/vitals | `1-web-site/performance.md`（LCP 2.5s / INP 200ms / CLS 0.1） | ⚠️ |
 | 10 | Google Search Essentials | https://developers.google.com/search/docs/essentials | `1-web-site/seo.md`（要件/スパムポリシー/推奨の3層構造） | ⚠️ |
 | 11 | Google SEO Starter Guide | https://developers.google.com/search/docs/fundamentals/seo-starter-guide | `1-web-site/seo.md`（**Googleが効かないと明言した項目**：キーワード密度・meta keywords・文字数・見出し順序・URLのキーワード・E-E-A-T・重複ペナルティ） | ⚠️ |
+| 12 | Anthropic `frontend-design` skill（**Apache-2.0**） | https://github.com/anthropics/skills | `1-web-site/visual-design.md` §0（**AI生成デザインの3デフォルト**）、`process.md` ⑤（計画→批評の2段階、Signature、シャネルの引用）、`LESSONS.md` L-007 | ⚠️ |
 
 ---
 
@@ -123,3 +124,20 @@
 
 **方針：実装チュートリアル（YouTube等）は snippets や実装の参考にとどめ、
 資料本体の主張の根拠にはしない。** 混ぜると台帳の意味がなくなる。
+
+---
+
+## エージェントスキルの調査（2026-08-01）
+
+`claudemarketplaces.com/skills` / `build.nvidia.com/skills` を調査した結果。
+
+| スキル | ライセンス | 判断 |
+|---|---|---|
+| **`frontend-design`**（anthropics/skills） | **Apache-2.0** | **採用。** 出典 #12。AI生成デザインの3デフォルト、Signature の概念、計画→批評の2段階、CSS詳細度の警告。**この資料で最も価値のあった外部入力** |
+| `web-design-guidelines`（vercel-labs） | 未記載 | **採用済み**（出典 #1）。`implementation-checklist.md` の土台 |
+| `ui-ux-pro-max`（nextlevelbuilder） | **MIT** | **限定採用。** CSV 752行のデータ集。①`ux-guidelines.csv`（99行のDo/Don't）は突き合わせ用に有用 ②ただし `ui-reasoning.csv` は「Glassmorphism + Flat Design」「Trust blue」といった**流行スタイルの推薦**で、`frontend-design` が警告する「既定値に流れる」思考そのもの。③実際に誤りも確認：`scroll-behavior: smooth` を推奨しているが `prefers-reduced-motion` の但し書きがない（本資料の `motion.md` の方が正確）。**スタイル推薦部分は採らない** |
+| `NVIDIA/skills` | Apache-2.0 | **不採用。** 全290スキルを確認したが、CUDA・ロボティクス・Jetson・DOCA・医療画像・NeMo のみで、**UI/UX/Web は1件もない**。`?q=ui` の検索ヒットは "build" / "guide" 等に含まれる "ui" の誤検出 |
+| `vercel-react-best-practices` / `shadcn` / `vercel-composition-patterns` | — | **保留。** React 前提。本サイトはバニラJS方針のため現時点で対象外。`2-web-app` で React を使うなら再検討 |
+
+**教訓：スキルは「データ量」ではなく「主張の質」で選ぶ。**
+752行のCSVより、`frontend-design` の1ファイルの方が資料を変えた。
