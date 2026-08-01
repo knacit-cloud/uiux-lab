@@ -66,19 +66,45 @@
     };
   }
 
-  // 実際に見えている背景色を祖先を辿って求める
-  function effectiveBg(el) {
+  // background-image に含まれる rgb() を全部抜き出す（グラデーションの色停止点）
+  function gradientStops(bgImage) {
+    if (!bgImage || bgImage === 'none') return null;
+    if (/url\(/.test(bgImage)) return 'unknown';   // 画像は測れない
+    var m = bgImage.match(/rgba?\([^)]+\)/g);
+    if (!m) return 'unknown';
+    var stops = m.map(toRgb).filter(function (c) { return c && c.a > 0.5; });
+    return stops.length ? stops : 'unknown';
+  }
+
+  /* 実際に見えている背景を祖先を辿って求める。
+     戻り値: { colors: [色…], unknown: bool }
+       ・単色なら colors は1つ
+       ・グラデーションなら色停止点すべて（最悪ケースで判定するため）
+       ・画像背景は unknown（測定不能として報告する）
+
+     ⚠️ background-color だけを見ると、暗いグラデーションの上の
+        明るい文字を「背景も明るい」と誤判定する（knacit.com で実際に発生）。 */
+  function effectiveBg(el, depth) {
+    depth = depth || 0;
     var node = el;
-    while (node && node.nodeType === 1) {
-      var c = toRgb(getComputedStyle(node).backgroundColor);
+    while (node && node.nodeType === 1 && depth < 30) {
+      var s = getComputedStyle(node);
+
+      var stops = gradientStops(s.backgroundImage);
+      if (stops === 'unknown') return { colors: [], unknown: true };
+      if (stops) return { colors: stops, unknown: false };
+
+      var c = toRgb(s.backgroundColor);
       if (c && c.a > 0) {
-        if (c.a >= 1) return c;
-        var under = effectiveBg(node.parentElement) || { r: 255, g: 255, b: 255, a: 1 };
-        return blend(c, under);
+        if (c.a >= 1) return { colors: [c], unknown: false };
+        var under = effectiveBg(node.parentElement, depth + 1);
+        if (under.unknown) return under;
+        return { colors: under.colors.map(function (u) { return blend(c, u); }), unknown: false };
       }
       node = node.parentElement;
+      depth++;
     }
-    return { r: 255, g: 255, b: 255, a: 1 };   // 最終的に白とみなす
+    return { colors: [{ r: 255, g: 255, b: 255, a: 1 }], unknown: false };
   }
 
   function isVisible(el) {
@@ -144,7 +170,7 @@
   rule('contrast', 'テキストのコントラスト比', function (add) {
     var els = document.querySelectorAll(
       'p,li,td,th,dt,dd,h1,h2,h3,h4,h5,h6,a,button,label,span,figcaption,blockquote,small,strong,em');
-    var seen = 0, bad = [];
+    var seen = 0, bad = [], unmeasurable = [];
 
     for (var i = 0; i < els.length; i++) {
       var el = els[i];
@@ -155,14 +181,14 @@
         if (el.childNodes[n].nodeType === 3) own += el.childNodes[n].nodeValue;
       }
       if (!own.trim()) continue;
+      // 装飾は対象外：aria-hidden の中、および記号だけのテキスト（区切りの「·」等）
+      if (el.closest('[aria-hidden="true"]')) continue;
+      if (!/[\wぁ-んァ-ヶ一-鿿]/.test(own)) continue;
       seen++;
 
       var s = getComputedStyle(el);
       var fgRaw = toRgb(s.color);
       if (!fgRaw) continue;
-      var bg = effectiveBg(el);
-      var fg = blend(fgRaw, bg);
-      var ratio = contrast(fg, bg);
 
       var size = parseFloat(s.fontSize);
       var weight = parseInt(s.fontWeight, 10) || 400;
@@ -170,12 +196,50 @@
       var large = size >= 24 || (size >= 18.66 && weight >= 700);
       var need = large ? 3 : 4.5;
 
+      var bgInfo = effectiveBg(el);
+      if (bgInfo.unknown) { unmeasurable.push(selectorOf(el)); continue; }
+
+      // グラデーションは全停止点で測り、最悪値を採用する
+      var ratio = Infinity, fg = null, bg = null;
+      bgInfo.colors.forEach(function (candidate) {
+        var f = blend(fgRaw, candidate);
+        var r2 = contrast(f, candidate);
+        if (r2 < ratio) { ratio = r2; fg = f; bg = candidate; }
+      });
+      if (!fg) continue;
+
       if (ratio < need) {
-        bad.push(selectorOf(el) + ' — ' + ratio.toFixed(2) + ':1（要 ' + need + ':1、' +
-          Math.round(size) + 'px ' + weight + '） ' + hex(fg) + ' on ' + hex(bg));
+        bad.push({ combo: hex(fg) + ' on ' + hex(bg), ratio: ratio, need: need,
+                   size: Math.round(size), sel: selectorOf(el) });
       }
     }
-    if (bad.length) add('error', bad.length + ' 件が基準未満（' + seen + ' 件中）', bad.slice(0, 15));
+    if (unmeasurable.length) {
+      add('info', unmeasurable.length + ' 件は背景が画像のため自動で測れない（目視で確認すること）',
+        unmeasurable.slice(0, 8));
+    }
+    if (!bad.length) return;
+
+    // 個別に59件並べても直せない。「どの色の組み合わせが原因か」に集約する。
+    // 色は数個しかないので、直す対象は必ず少数に収束する。
+    var groups = {};
+    bad.forEach(function (b) {
+      var g = groups[b.combo] || (groups[b.combo] = { n: 0, ratio: b.ratio, need: b.need,
+                                                      sizes: {}, sample: b.sel });
+      g.n++;
+      g.ratio = Math.min(g.ratio, b.ratio);
+      g.sizes[b.size + 'px'] = true;
+    });
+
+    var lines = Object.keys(groups).sort(function (a, b) {
+      return groups[b].n - groups[a].n;
+    }).map(function (k) {
+      var g = groups[k];
+      return k + ' — ' + g.ratio.toFixed(2) + ':1（要 ' + g.need + ':1） × ' + g.n + '件 ' +
+             '[' + Object.keys(g.sizes).join(', ') + '] 例: ' + g.sample;
+    });
+
+    add('error', bad.length + ' 件が基準未満（' + seen + ' 件中）／原因は ' +
+        lines.length + ' 通りの色の組み合わせ', lines);
   });
 
   /* --- タップ領域（WCAG 2.5.8）------------------------------------------ */
@@ -191,7 +255,7 @@
       // 文章中のインラインリンクは例外（2.5.8 Inline）。
       // 「文章中」の判定は祖先タグではなく、前後に地の文があるかで見る。
       // （<label> の中のリンクなども拾えるようにするため）
-      if (s.display === 'inline' || s.display === 'inline-block') {
+      if (s.display === 'inline' || s.display === 'inline-block' || s.display === 'inline-flex') {
         var parent = el.parentElement;
         var siblingText = parent ? (parent.textContent || '').replace(el.textContent || '', '').trim() : '';
         if (siblingText.length > 0) continue;

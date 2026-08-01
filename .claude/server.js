@@ -41,6 +41,8 @@ http.createServer((req, res) => {
       res.writeHead(200, {
         'Content-Type': types[path.extname(filePath)] || 'application/octet-stream',
         'Cache-Control': 'no-store',
+        // 他サイトの DevTools から audit.js を読み込めるようにする（開発用）
+        'Access-Control-Allow-Origin': '*',
       });
       res.end(data);
     });
