@@ -1,0 +1,98 @@
+/* ==========================================================================
+   theme: sumi — 墨・和
+   --------------------------------------------------------------------------
+   題材の世界: 墨、和紙、罫、印章。日本語の組版そのものを主役にする
+
+   考え方:
+     ・ほぼ無彩色。墨の濃淡だけで階層を作る
+     ・主要ボタンは「墨」（ほぼ黒）。ブランド色で塗らない
+     ・アクセントは藍1色。リンクとラベルにだけ使う
+     ・和文明朝を表示用に使う。欧文セリフを主役にしない ← ここが重要
+     ・行間を広く取り、縦のリズムで読ませる
+
+   向く相手: 士業、伝統産業、教育、文章が主役のサイト
+   避けるべき: 速さや先進性を出したい場合（落ち着きすぎる）
+
+   ⚠️ 注意: 背景を生成り（#F4F1EA 付近）にし、アクセントをテラコッタにすると
+      「AI が生成したデザイン」の典型（1-web-site/visual-design.md §0）に
+      逆戻りする。ここでは背景を中性寄りの白に、アクセントを藍にしている。
+
+   使い方: <html data-theme-name="sumi"> または body に .theme-sumi
+   ========================================================================== */
+
+:root[data-theme-name='sumi'],
+.theme-sumi {
+  /* --- 原子：墨の濃淡 ----------------------------------------------------- */
+  --c-sumi-0:   #FBFBFA;
+  --c-sumi-50:  #F4F4F1;
+  --c-sumi-100: #E9E9E4;
+  --c-sumi-200: #D8D8D2;
+  --c-sumi-400: #A3A39C;   /* 装飾用。2.5:1 で部品の境界には使えない */
+  --c-sumi-500: #8A8A83;   /* 部品の境界用。3.4:1（WCAG 1.4.11 合格） */
+  --c-sumi-600: #6B6B66;
+  --c-sumi-800: #3A3A37;
+  --c-sumi-900: #1C1C1A;
+
+  --c-ai-600:   #34558B;   /* 藍。白文字で 7.5:1 */
+  --c-ai-700:   #27416B;
+
+  /* --- 意味 --------------------------------------------------------------- */
+  --text-primary:   var(--c-sumi-900);
+  --text-secondary: var(--c-sumi-800);
+  --text-muted:     var(--c-sumi-600);
+  --text-on-accent: #FFFFFF;
+  --text-link:      var(--c-ai-600);
+
+  --bg-page:      var(--c-sumi-0);
+  --bg-surface:   #FFFFFF;
+  --bg-surface-2: var(--c-sumi-50);
+  --bg-surface-3: var(--c-sumi-100);
+
+  --border-default: var(--c-sumi-200);
+  --border-subtle:  var(--c-sumi-100);
+  --border-strong:  var(--c-sumi-500);
+
+  /* 主要ボタンは墨。ブランド色で塗らないのがこのテーマの肝 */
+  --action-primary:       var(--c-sumi-900);
+  --action-primary-hover: var(--c-sumi-800);
+  --action-accent:        var(--c-ai-600);
+  --focus-ring:           var(--c-ai-600);
+
+  /* --- 書体：和文明朝が主役。欧文セリフを見出しに使わない --------------- */
+  --font-display: 'Hiragino Mincho ProN', 'Shippori Mincho', 'Noto Serif JP',
+                  'Yu Mincho', serif;
+  --font-sans:    'Inter', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+
+  /* --- 形：角丸ごく小。影なし -------------------------------------------- */
+  --radius-sm:   2px;
+  --radius-md:   2px;
+  --radius-lg:   4px;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: 0 12px 32px rgba(28, 28, 26, 0.10);
+
+  /* --- シグネチャー：縦のリズムと行間 ------------------------------------ */
+  --signature: 'vertical rhythm — generous leading, thin rules';
+}
+
+/* 和文の可読性を優先して行間を広く取る */
+:root[data-theme-name='sumi'] body,
+.theme-sumi {
+  line-height: 1.9;
+}
+
+/* 見出しは明朝＋字間を締める */
+:root[data-theme-name='sumi'] :is(h1, h2, h3),
+.theme-sumi :is(h1, h2, h3) {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+/* 罫（シグネチャー）：極細の線を1本だけ引く */
+:root[data-theme-name='sumi'] .rule,
+.theme-sumi .rule {
+  height: 1px;
+  background: var(--c-sumi-400);
+}

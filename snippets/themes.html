@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ja" data-theme-name="industrial">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>テーマ比較 — uiux-lab snippets</title>
+<meta name="description" content="同じ構造を4つのトークンセットで切り替え、コントラスト比を実測する。">
+
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/japanese-text.css">
+<link rel="stylesheet" href="css/focus-ring.css">
+<link rel="stylesheet" href="css/reduced-motion.css">
+<link rel="stylesheet" href="css/themes/industrial.css">
+<link rel="stylesheet" href="css/themes/clinical.css">
+<link rel="stylesheet" href="css/themes/sumi.css">
+
+<style>
+  /* --------------------------------------------------------------
+     このページは Tailwind を使わない。
+     すべて css/tokens.css の意味トークンだけで組んでいる。
+     テーマを差し替えると見た目が変わるのに、HTML は1文字も変わらない
+     ＝ 意味トークン層が機能していることの証明。
+     -------------------------------------------------------------- */
+  body { background: var(--bg-page); color: var(--text-primary); margin: 0; }
+  .wrap { max-width: 60rem; margin-inline: auto; padding-inline: 1.5rem; }
+
+  .switcher {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+    padding: .75rem 1.5rem;
+    background: var(--bg-surface); border-bottom: 1px solid var(--border-default);
+  }
+  .switcher button {
+    min-height: 40px; padding-inline: 1rem;
+    border: 1px solid var(--border-default); border-radius: var(--radius-sm);
+    background: var(--bg-surface); color: var(--text-secondary);
+    font: inherit; font-size: .875rem; cursor: pointer;
+    transition: background-color 150ms, color 150ms, border-color 150ms;
+  }
+  .switcher button[aria-pressed="true"] {
+    background: var(--action-primary); color: var(--text-on-accent);
+    border-color: var(--action-primary);
+  }
+
+  section { padding-block: var(--space-20, 5rem); }
+  .eyebrow {
+    font-size: .8125rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--action-accent); margin: 0 0 .75rem;
+  }
+  h1 { font-family: var(--font-display, inherit); font-size: clamp(1.75rem, 5vw, 3rem);
+       line-height: 1.25; margin: 0 0 1rem; }
+  h2 { font-family: var(--font-display, inherit); font-size: clamp(1.375rem, 3.5vw, 2rem);
+       margin: 0 0 .75rem; }
+  h3 { font-size: 1.0625rem; margin: 0 0 .5rem; }
+  p  { color: var(--text-muted); margin: 0 0 1rem; max-width: 40em; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 48px; padding-inline: 1.5rem;
+    border-radius: var(--radius-sm); border: 1px solid transparent;
+    background: var(--action-primary); color: var(--text-on-accent);
+    font: inherit; font-weight: 500; text-decoration: none; cursor: pointer;
+    transition: background-color 150ms;
+  }
+  .btn:hover { background: var(--action-primary-hover); }
+  .btn-outline {
+    background: transparent; color: var(--action-primary);
+    border-color: var(--action-primary);
+  }
+
+  .grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .card {
+    padding: 1.5rem; border-radius: var(--radius-md);
+    background: var(--bg-surface); border: 1px solid var(--border-default);
+    box-shadow: var(--shadow-sm);
+  }
+  .band { background: var(--bg-surface-2); }
+  .rule { height: 1px; background: var(--border-default); margin-block: 2rem; }
+
+  .stats { display: flex; flex-wrap: wrap; gap: 2.5rem; margin-top: 2rem; }
+  .stats dt { font-size: .8125rem; color: var(--text-muted); margin-bottom: .25rem; }
+  .stats dd { margin: 0; font-size: 2rem; font-family: var(--font-num, var(--font-display, inherit));
+              font-variant-numeric: tabular-nums; }
+  .stats .unit { font-size: .9375rem; color: var(--text-muted); }
+
+  /* コントラスト実測テーブル */
+  table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+  th, td { text-align: left; padding: .625rem .75rem; border-bottom: 1px solid var(--border-subtle); }
+  th { color: var(--text-muted); font-weight: 500; }
+  td.ratio { font-variant-numeric: tabular-nums; text-align: right; }
+  .pass { color: #1B7A3D; font-weight: 600; }
+  .fail { color: #B3261E; font-weight: 600; }
+  .swatch { display: inline-block; width: 1rem; height: 1rem; vertical-align: -2px;
+            border: 1px solid var(--border-default); border-radius: 2px; margin-right: .4rem; }
+  .note { font-size: .875rem; color: var(--text-muted); }
+  .signature { font-size: .8125rem; color: var(--text-muted); font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="switcher" role="group" aria-label="テーマ切り替え">
+  <span class="note" style="margin-right:.5rem">テーマ:</span>
+  <button type="button" data-theme="industrial" aria-pressed="true">industrial 現場・計測</button>
+  <button type="button" data-theme="clinical"   aria-pressed="false">clinical 清潔・実直</button>
+  <button type="button" data-theme="sumi"       aria-pressed="false">sumi 墨・和</button>
+  <button type="button" data-theme=""           aria-pressed="false">default（AIデフォルト該当）</button>
+</div>
+
+<main class="wrap">
+
+  <section>
+    <p class="eyebrow">Section label</p>
+    <h1>何から手をつけるべきか、無料で診断します</h1>
+    <p>現場の非効率を、外からの視点で言語化する。3分の入力から始められます。</p>
+    <p>
+      <a href="#" class="btn">無料診断を申し込む</a>
+      <a href="#" class="btn btn-outline" style="margin-left:.75rem">料金を見る</a>
+    </p>
+    <dl class="stats">
+      <div><dt>対応業種</dt><dd class="num">12</dd></div>
+      <div><dt>平均削減時間</dt><dd class="num">24<span class="unit"> h/月</span></dd></div>
+      <div><dt>初回返答</dt><dd class="num">3<span class="unit"> 営業日</span></dd></div>
+    </dl>
+    <p class="signature" id="sigText" style="margin-top:2rem"></p>
+  </section>
+
+  <div class="rule"></div>
+
+  <section class="band" style="padding-inline:1.5rem;border-radius:var(--radius-lg)">
+    <h2>解決の打ち手</h2>
+    <p>同じ HTML のまま、トークンだけを差し替えています。</p>
+    <div class="grid" style="margin-top:2rem">
+      <div class="card"><h3>仕組みの再設計</h3><p style="margin:0">承認を3段階から1段階に。</p></div>
+      <div class="card"><h3>ツール選定・導入</h3><p style="margin:0">現場の手順に合うものを選ぶ。</p></div>
+      <div class="card"><h3>アプリ構築</h3><p style="margin:0">既製品が合わないときだけ作る。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>コントラスト実測</h2>
+    <p>
+      表示中のテーマの実際の計算値。WCAG 1.4.3（通常テキスト 4.5:1 / 大きい文字 3:1）と
+      1.4.11（UI部品 3:1）で判定しています。<strong>目視ではなく数値で確認する。</strong>
+    </p>
+    <table id="contrastTable">
+      <thead>
+        <tr><th>組み合わせ</th><th>色</th><th style="text-align:right">比</th><th>必要</th><th>判定</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p class="note" style="margin-top:1rem">
+      計算は sRGB の相対輝度（WCAG 2.x の定義）に基づく。
+    </p>
+  </section>
+
+  <section style="padding-bottom:6rem">
+    <h2>使い方</h2>
+    <p>
+      <code>&lt;html data-theme-name="industrial"&gt;</code> を付けるか、
+      任意の要素に <code>class="theme-industrial"</code> を付ける。
+      該当する CSS を読み込むだけで、HTML は変更しない。
+    </p>
+    <p>
+      <strong>そのまま使わず、案件ごとに選び直すこと。</strong>
+      これらは「出発点の例」であって既定値ではありません
+      （<code>1-web-site/visual-design.md</code> §0）。
+    </p>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- テーマ切り替え ---------------------------------------------------- */
+  var root = document.documentElement;
+  var btns = document.querySelectorAll('.switcher button');
+
+  function setTheme(name) {
+    if (name) root.setAttribute('data-theme-name', name);
+    else root.removeAttribute('data-theme-name');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].setAttribute('aria-pressed', String(btns[i].dataset.theme === name));
+    }
+    // シグネチャーを表示
+    var sig = getComputedStyle(root).getPropertyValue('--signature').trim().replace(/^'|'$/g, '');
+    document.getElementById('sigText').textContent = sig ? 'Signature: ' + sig : '';
+    measure();
+  }
+
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].addEventListener('click', function () { setTheme(this.dataset.theme); });
+  }
+
+  /* ---- コントラスト計算（WCAG 2.x）-------------------------------------- */
+  function toRgb(css) {
+    // getComputedStyle は rgb(...) / rgba(...) を返す
+    var m = css.match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    var p = m[1].split(/[\s,\/]+/).filter(Boolean).map(parseFloat);
+    return [p[0], p[1], p[2]];
+  }
+
+  function luminance(rgb) {
+    var a = rgb.map(function (v) {
+      v /= 255;
+      return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+  }
+
+  function ratio(fg, bg) {
+    var l1 = luminance(fg), l2 = luminance(bg);
+    var hi = Math.max(l1, l2), lo = Math.min(l1, l2);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  // 実際に描画された要素から色を取る（変数の解決ミスも一緒に検出できる）
+  function colorOf(varName) {
+    var probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute;visibility:hidden;color:' + 'var(' + varName + ')';
+    document.body.appendChild(probe);
+    var c = toRgb(getComputedStyle(probe).color);
+    probe.remove();
+    return c;
+  }
+
+  var CHECKS = [
+    { label: '本文 / ページ背景',        fg: '--text-primary',   bg: '--bg-page',      need: 4.5 },
+    { label: '補助テキスト / ページ背景', fg: '--text-muted',     bg: '--bg-page',      need: 4.5 },
+    { label: '本文 / 帯背景',            fg: '--text-primary',   bg: '--bg-surface-2', need: 4.5 },
+    { label: '補助テキスト / 帯背景',     fg: '--text-muted',     bg: '--bg-surface-2', need: 4.5 },
+    { label: 'ボタン文字 / ボタン背景',   fg: '--text-on-accent', bg: '--action-primary', need: 4.5 },
+    { label: 'リンク / ページ背景',       fg: '--text-link',      bg: '--bg-page',      need: 4.5 },
+    { label: 'アクセント / ページ背景',   fg: '--action-accent',  bg: '--bg-page',      need: 3,
+      hint: 'UI部品・大きい文字用（1.4.11）' },
+    { label: '部品の境界線 / ページ背景',  fg: '--border-strong',  bg: '--bg-page',      need: 3,
+      hint: '入力欄・チェックボックスの枠に使う場合（1.4.11）。装飾の区切り線は対象外' }
+  ];
+
+  function hex(rgb) {
+    return '#' + rgb.map(function (v) {
+      return ('0' + Math.round(v).toString(16)).slice(-2);
+    }).join('').toUpperCase();
+  }
+
+  function measure() {
+    var tbody = document.querySelector('#contrastTable tbody');
+    tbody.innerHTML = '';
+    CHECKS.forEach(function (c) {
+      var fg = colorOf(c.fg), bg = colorOf(c.bg);
+      if (!fg || !bg) return;
+      var r = ratio(fg, bg);
+      var ok = r >= c.need;
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + c.label + (c.hint ? '<br><span class="note">' + c.hint + '</span>' : '') + '</td>' +
+        '<td><span class="swatch" style="background:' + hex(fg) + '"></span>' + hex(fg) +
+        '<br><span class="swatch" style="background:' + hex(bg) + '"></span>' + hex(bg) + '</td>' +
+        '<td class="ratio">' + r.toFixed(2) + ':1</td>' +
+        '<td class="ratio">' + c.need + ':1</td>' +
+        '<td class="' + (ok ? 'pass' : 'fail') + '">' + (ok ? '合格' : '不足') + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  setTheme('industrial');
+})();
+</script>
+</body>
+</html>

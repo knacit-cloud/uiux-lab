@@ -1,0 +1,90 @@
+/* ==========================================================================
+   theme: industrial — 現場・計測
+   --------------------------------------------------------------------------
+   題材の世界: 工程表、図面、計器、ノギスの目盛り、安全標識
+
+   考え方:
+     ・主役は「数値」。等幅数字を既定にし、単位は小さく添える
+     ・角丸は小さい（機能的なパネルの感じ）。飾りの丸みを付けない
+     ・警告色（アンバー）は極小面積のみ。現場の安全色と同じ扱いで、
+       「ここを見ろ」以外に使わない
+     ・影は使わない。境界は罫線で示す（図面の線）
+
+   向く相手: 製造業、物流、建設、設備、インフラ
+   避けるべき: 情緒に訴えたい場合（硬すぎる）
+
+   使い方: <html data-theme-name="industrial"> または body に .theme-industrial
+   ========================================================================== */
+
+:root[data-theme-name='industrial'],
+.theme-industrial {
+  /* --- 原子 --------------------------------------------------------------- */
+  --c-steel-50:  #F4F6F8;
+  --c-steel-100: #EEF1F4;
+  --c-steel-200: #DDE3E9;
+  --c-steel-300: #C9D2DA;
+  --c-steel-500: #7C8B99;
+  --c-steel-600: #5A6B7A;
+  --c-steel-800: #2C3B4A;
+  --c-steel-900: #1B2733;
+
+  --c-blue-700:  #1F4E79;   /* 主要アクション。白文字で 8.6:1 */
+  --c-blue-800:  #17395A;
+  --c-amber-600: #C77700;   /* 警告色。白文字は載せない（3.5:1 で不足） */
+
+  /* --- 意味 --------------------------------------------------------------- */
+  --text-primary:   var(--c-steel-900);
+  --text-secondary: var(--c-steel-800);
+  --text-muted:     var(--c-steel-600);
+  --text-on-accent: #FFFFFF;
+  --text-link:      var(--c-blue-700);
+
+  --bg-page:      #FFFFFF;
+  --bg-surface:   #FFFFFF;
+  --bg-surface-2: var(--c-steel-100);
+  --bg-surface-3: var(--c-steel-200);
+
+  --border-default: var(--c-steel-300);
+  --border-subtle:  var(--c-steel-200);
+  --border-strong:  var(--c-steel-500);
+
+  --action-primary:       var(--c-blue-700);
+  --action-primary-hover: var(--c-blue-800);
+  --action-accent:        var(--c-amber-600);
+  --focus-ring:           var(--c-blue-700);
+
+  /* --- 書体：サンセリフのみ。表示用セリフを使わない --------------------- */
+  --font-display: 'Inter Tight', 'Inter', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  --font-sans:    'Inter', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  --font-num:     'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* --- 形：角丸は小さく、影は使わない ------------------------------------ */
+  --radius-sm:   3px;
+  --radius-md:   4px;
+  --radius-lg:   6px;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: 0 8px 24px rgba(27, 39, 51, 0.12);   /* モーダルのみ */
+
+  /* --- シグネチャー：数値の見せ方 ---------------------------------------- */
+  --signature: 'tabular numerals with unit labels';
+}
+
+/* 数値は等幅を既定にする。桁が揃わないと比較できない */
+.theme-industrial .num,
+:root[data-theme-name='industrial'] .num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* 目盛り風の区切り線（シグネチャー） */
+.theme-industrial .rule,
+:root[data-theme-name='industrial'] .rule {
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--border-strong) 0 1px,
+    transparent 1px 8px
+  );
+}

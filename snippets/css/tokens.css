@@ -25,7 +25,8 @@
   --c-neutral-100: #F7F3EE;
   --c-neutral-200: #EFE9E1;
   --c-neutral-300: #E0D7CB;
-  --c-neutral-400: #C4B8A9;
+  --c-neutral-400: #C4B8A9;   /* 装飾用。白背景に 1.8:1。部品の境界には使えない */
+  --c-neutral-450: #8E8375;   /* 部品の境界用。白背景に 3.7:1（WCAG 1.4.11 合格） */
   --c-neutral-500: #948878;
   --c-neutral-600: #736A60;
   --c-neutral-700: #574F47;
@@ -58,9 +59,14 @@
   --bg-surface-2:    var(--c-neutral-100);
   --bg-surface-3:    var(--c-neutral-200);
 
-  --border-default:  var(--c-neutral-300);
+  /* --- 罫線の使い分け（重要）---------------------------------------------
+     WCAG 1.4.11 は「UI部品を識別するために必要な視覚情報」に 3:1 を要求する。
+       ・入力欄・チェックボックス・ボタンの境界 → --border-strong（3:1 以上）
+       ・カードの囲み・セクションの区切り（装飾）→ --border-default で足りる
+     この区別を怠ると、薄い罫線の入力欄が「どこが枠か分からない」状態になる。 */
+  --border-default:  var(--c-neutral-300);   /* 装飾・区切り用 */
   --border-subtle:   var(--c-neutral-200);
-  --border-strong:   var(--c-neutral-400);
+  --border-strong:   var(--c-neutral-450);   /* 部品の境界用。3:1 を満たす */
 
   --action-primary:        var(--c-primary-600);
   --action-primary-hover:  var(--c-primary-700);
@@ -124,7 +130,7 @@
 
     --border-default: #3A3430;
     --border-subtle:  #2E2A26;
-    --border-strong:  #4A423C;
+    --border-strong:  #7A6F66;   /* 暗背景に 3.6:1（旧 #4A423C は 1.8:1 で不足）*/
 
     /* 暗背景では明るいアクセント＋濃い文字。逆にするとコントラストが足りない */
     --action-primary:       var(--c-primary-300);
@@ -147,7 +153,7 @@
   --bg-surface-3:   #302B27;
   --border-default: #3A3430;
   --border-subtle:  #2E2A26;
-  --border-strong:  #4A423C;
+  --border-strong:  #7A6F66;   /* 暗背景に 3.6:1（旧 #4A423C は 1.8:1 で不足）*/
   --action-primary:       var(--c-primary-300);
   --action-primary-hover: var(--c-primary-200);
   --focus-ring:           var(--c-primary-300);

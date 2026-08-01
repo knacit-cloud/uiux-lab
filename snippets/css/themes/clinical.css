@@ -1,0 +1,75 @@
+/* ==========================================================================
+   theme: clinical — 清潔・実直
+   --------------------------------------------------------------------------
+   題材の世界: 診療、検査、士業、認証。清潔で、余計なものがない
+
+   考え方:
+     ・白を主役にし、面積の大半を空ける。色は極端に少ない
+     ・角丸は大きめ（12〜16px）。柔らかく、しかし装飾しない
+     ・影を使わず、淡い罫線で区切る（清潔感は「影がないこと」から出る）
+     ・アクセントは深い青緑1色のみ。第2アクセントを作らない
+
+   向く相手: 医療、介護、士業、検査・認証、教育
+   避けるべき: 熱量や勢いを出したい場合（冷たく見える）
+
+   使い方: <html data-theme-name="clinical"> または body に .theme-clinical
+   ========================================================================== */
+
+:root[data-theme-name='clinical'],
+.theme-clinical {
+  /* --- 原子 --------------------------------------------------------------- */
+  --c-teal-50:  #F2F7F6;
+  --c-teal-100: #E6F0EE;
+  --c-teal-200: #D6E3E1;
+  --c-teal-400: #8FAAA6;   /* 装飾用。白背景に 2.5:1 で、部品の境界には使えない */
+  --c-teal-500: #6F8C87;   /* 部品の境界用。白背景に 3.6:1（WCAG 1.4.11 合格） */
+  --c-teal-600: #5A6E6C;
+  --c-teal-700: #1D6357;   /* 主要アクション。白文字で 7.1:1 */
+  --c-teal-800: #165046;
+  --c-teal-900: #16302E;
+
+  /* --- 意味 --------------------------------------------------------------- */
+  --text-primary:   var(--c-teal-900);
+  --text-secondary: #2E4744;
+  --text-muted:     var(--c-teal-600);
+  --text-on-accent: #FFFFFF;
+  --text-link:      var(--c-teal-700);
+
+  --bg-page:      #FFFFFF;
+  --bg-surface:   #FFFFFF;
+  --bg-surface-2: var(--c-teal-50);
+  --bg-surface-3: var(--c-teal-100);
+
+  --border-default: var(--c-teal-200);
+  --border-subtle:  var(--c-teal-100);
+  --border-strong:  var(--c-teal-500);
+
+  --action-primary:       var(--c-teal-700);
+  --action-primary-hover: var(--c-teal-800);
+  --action-accent:        var(--c-teal-700);   /* 第2アクセントを作らない */
+  --focus-ring:           var(--c-teal-700);
+
+  /* --- 書体：サンセリフ。ウェイト差だけで階層を作る --------------------- */
+  --font-display: 'Inter', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  --font-sans:    'Inter', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+
+  /* --- 形：角丸は大きく、影は使わない ------------------------------------ */
+  --radius-sm:   10px;
+  --radius-md:   14px;
+  --radius-lg:   20px;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;   /* モーダルも罫線で表現する */
+
+  /* --- シグネチャー：余白の量そのもの ------------------------------------ */
+  --signature: 'space as the message — nothing is crowded';
+  --space-20: 6rem;    /* 既定より広く取る */
+  --space-28: 9rem;
+}
+
+/* 影の代わりに罫線。清潔感は「影がないこと」から出る */
+.theme-clinical .card,
+:root[data-theme-name='clinical'] .card {
+  border: 1px solid var(--border-default);
+  box-shadow: none;
+}
