@@ -17,17 +17,23 @@
 | `text-muted` | 補助テキスト |
 | `bg-surface` | ページ背景 |
 | `bg-surface-2` | 一段沈んだ背景（セクションの帯） |
-| `border-line` | 罫線 |
-| `accent` / `accent-deep` | ブランド色（CTA・強調） |
+| `border-line` | 罫線（装飾用） |
+| `accent` | ブランド色。**装飾・アイコン・大きい文字**（3:1 で足りる） |
+| `accent-deep` | **ボタン背景・小さい文字**（4.5:1 が必要） |
 
 ```js
 // tailwind.config
 theme: { extend: { colors: {
   ink: '#2E2A26', muted: '#736A60',
-  surface: '#FFFFFF', 'surface-2': '#F7F3EE', line: '#E6DED4',
-  accent: '#C99A93', 'accent-deep': '#A9786F',
+  surface: '#FFFFFF', 'surface-2': '#F7F3EE', line: '#E0D7CB',
+  accent: '#C99A93',        // 装飾用
+  'accent-deep': '#8E6058', // 白文字5.30:1 / 帯背景の上5.30:1 — 実測済み
 }}}
 ```
+
+> ⚠️ **`accent` と `accent-deep` を混同しない。**
+> 装飾用の明るい色をボタン背景や小さい文字に使うと、ほぼ必ず 4.5:1 を割る。
+> 実測例と対処は [ANTI-PATTERNS §4](../ANTI-PATTERNS.md) / [LESSONS L-009](../LESSONS.md)。
 
 ---
 
