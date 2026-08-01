@@ -11,7 +11,7 @@
     colors: {
       ink: '#2E2A26', muted: '#736A60',
       surface: '#FFFFFF', 'surface-2': '#F7F3EE', line: '#E0D7CB',
-      accent: '#C99A93', 'accent-deep': '#96685F', danger: '#A63A32',
+      accent: '#C99A93', 'accent-deep': '#8E6058', danger: '#A63A32',
     },
     fontFamily: { serif: ['Cormorant Garamond', 'Hiragino Mincho ProN', 'serif'] },
   }}};
@@ -34,7 +34,7 @@
     content: attr(data-pat);
     display: block; margin-bottom: .5rem;
     font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase;
-    color: #96685F; font-weight: 600;
+    color: #8E6058; font-weight: 600;
   }
 </style>
 </head>
@@ -47,7 +47,9 @@
      ============================================================ -->
 <header class="fixed inset-x-0 top-0 z-50 border-b border-line bg-surface/90 backdrop-blur">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-    <a href="#" class="font-serif text-xl tracking-wide" translate="no">uiux&#8209;lab</a>
+    <!-- ロゴもタップ領域 44px を確保する（監査で 80×28 と出たため py を追加） -->
+    <a href="#" class="inline-flex min-h-[44px] items-center font-serif text-xl tracking-wide"
+       translate="no">uiux&#8209;lab</a>
 
     <nav class="hidden items-center gap-8 md:flex" aria-label="メインナビゲーション">
       <a href="#problems" class="text-sm text-muted hover:text-ink">課題</a>
@@ -64,7 +66,7 @@
 
       <!-- CTA は常に見せる（モバイルでも） -->
       <a href="#cta"
-         class="inline-flex min-h-[40px] items-center rounded-lg bg-accent-deep px-4
+         class="inline-flex min-h-[44px] items-center rounded-lg bg-accent-deep px-4
                 text-sm font-medium text-white transition-colors duration-150
                 hover:bg-[#7D5650]">
         <span class="ja">無料診断</span><span class="en">Free check</span>
@@ -330,7 +332,7 @@
           「受発注の確認電話が、月に40件から5件になりました。」
         </blockquote>
         <figcaption class="mt-6 flex items-center gap-4">
-          <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-line text-sm text-muted" aria-hidden="true">写真</span>
+          <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm text-ink" aria-hidden="true">写真</span>
           <div class="text-sm">
             <p class="font-medium">田中 太郎 さん</p>
             <p class="text-muted">株式会社◯◯ 業務部長</p>
@@ -342,7 +344,7 @@
           「何が問題か分からない状態から、やることが3つに絞れました。」
         </blockquote>
         <figcaption class="mt-6 flex items-center gap-4">
-          <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-line text-sm text-muted" aria-hidden="true">写真</span>
+          <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-2 text-sm text-ink" aria-hidden="true">写真</span>
           <div class="text-sm">
             <p class="font-medium">佐藤 花子 さん</p>
             <p class="text-muted">◯◯工業 代表取締役</p>
@@ -395,7 +397,7 @@
     <h2 class="font-serif text-3xl text-white md:text-4xl" style="text-wrap:balance">
       まず、現状を言葉にするところから
     </h2>
-    <p class="mt-4 leading-relaxed text-white/80">
+    <p class="mt-4 leading-relaxed text-white/90">
       3分の入力で、優先すべきボトルネックをお返しします。
     </p>
     <a href="html/form-contact.html"
@@ -404,7 +406,7 @@
               hover:bg-white/90">
       無料診断を申し込む
     </a>
-    <p class="mt-4 text-sm text-white/70">費用はかかりません・営業のご連絡はしません</p>
+    <p class="mt-4 text-sm text-white/90">費用はかかりません・営業のご連絡はしません</p>
   </div>
 </section>
 
@@ -462,5 +464,9 @@
 <script src="js/scroll-reveal.js" defer></script>
 <script src="js/nav-toggle.js" defer></script>
 <script src="js/lang-toggle.js" defer></script>
+
+<!-- 自己検査。コンソールに結果が出る。?audit=panel で画面表示、?audit=0 で無効化。
+     本番に出すときは外すこと（開発中だけの道具）。 -->
+<script src="js/audit.js" defer></script>
 </body>
 </html>

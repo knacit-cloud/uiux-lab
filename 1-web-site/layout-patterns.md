@@ -494,7 +494,7 @@ BtoBで最も効くセクション。「それ、うちだ」を作れれば以�
     <h2 class="font-serif text-3xl text-white md:text-4xl" style="text-wrap: balance">
       まず、現状を言葉にするところから
     </h2>
-    <p class="mt-4 leading-relaxed text-white/80">
+    <p class="mt-4 leading-relaxed text-white/90">
       3分の入力で、優先すべきボトルネックをお返しします。
     </p>
     <a href="#diagnosis"
@@ -505,7 +505,7 @@ BtoBで最も効くセクション。「それ、うちだ」を作れれば以�
               focus-visible:ring-offset-accent-deep">
       無料診断を申し込む
     </a>
-    <p class="mt-4 text-sm text-white/70">費用はかかりません・営業のご連絡はしません</p>
+    <p class="mt-4 text-sm text-white/90">費用はかかりません・営業のご連絡はしません</p>
   </div>
 </section>
 ```

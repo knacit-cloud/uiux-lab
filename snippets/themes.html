@@ -45,7 +45,7 @@
   section { padding-block: var(--space-20, 5rem); }
   .eyebrow {
     font-size: .8125rem; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--action-accent); margin: 0 0 .75rem;
+    color: var(--text-accent, var(--action-accent)); margin: 0 0 .75rem;
   }
   h1 { font-family: var(--font-display, inherit); font-size: clamp(1.75rem, 5vw, 3rem);
        line-height: 1.25; margin: 0 0 1rem; }
@@ -235,6 +235,8 @@
     { label: 'リンク / ページ背景',       fg: '--text-link',      bg: '--bg-page',      need: 4.5 },
     { label: 'アクセント / ページ背景',   fg: '--action-accent',  bg: '--bg-page',      need: 3,
       hint: 'UI部品・大きい文字用（1.4.11）' },
+    { label: '小さい文字のアクセント / ページ背景', fg: '--text-accent', bg: '--bg-page', need: 4.5,
+      hint: 'セクションラベル等。--action-accent とは別トークンにする' },
     { label: '部品の境界線 / ページ背景',  fg: '--border-strong',  bg: '--bg-page',      need: 3,
       hint: '入力欄・チェックボックスの枠に使う場合（1.4.11）。装飾の区切り線は対象外' }
   ];

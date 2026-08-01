@@ -14,7 +14,7 @@
    まず全部に付ける。個別に上書きする方が事故が少ない。
    -------------------------------------------------------------------------- */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--focus-ring, #96685F);
+  outline: 2px solid var(--focus-ring, #8E6058);
   outline-offset: 2px;
   border-radius: var(--radius-sm, 0.5rem);
 }
@@ -38,7 +38,7 @@
    内側の要素にフォーカスが入ったら、外枠全体を光らせる。
    -------------------------------------------------------------------------- */
 .field-group:focus-within {
-  outline: 2px solid var(--focus-ring, #96685F);
+  outline: 2px solid var(--focus-ring, #8E6058);
   outline-offset: 2px;
 }
 .field-group:focus-within :focus-visible {

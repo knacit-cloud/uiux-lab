@@ -89,6 +89,7 @@ http://localhost:4322/snippets/themes.html
 
 | ファイル | トリガー | 内容 |
 |---|---|---|
+| **`audit.js`** | 読み込むだけ | **ページ自己検査**（上記セクション参照） |
 | `scroll-reveal.js` | `data-reveal` | `IntersectionObserver` で出現。一度出したら戻さない。3秒の保険つき |
 | `nav-toggle.js` | `data-nav-toggle="パネルID"` | モバイルナビ。`aria-expanded` 同期・Esc で閉じてフォーカス復帰 |
 | `lang-toggle.js` | `data-lang-toggle` / `.ja` `.en` | 日英切替。`<html lang>` も書き換える |
@@ -105,6 +106,56 @@ http://localhost:4322/snippets/themes.html
 
 `<!-- COPY FROM HERE -->` 〜 `<!-- COPY TO HERE -->` の間がコピーする範囲。
 その外側はデモと設計メモ。
+
+---
+
+## `audit.js` — どのページにも貼れる自己検査
+
+チェックリストのうち**機械で判定できる項目**を自動化したもの。依存なし。
+
+```html
+<!-- 開発中のページに読み込む。本番では外す -->
+<script src="js/audit.js" defer></script>
+```
+
+- コンソールに結果が出る
+- `?audit=panel` を付けると画面右下にパネル表示
+- `?audit=0` で自動実行を止める
+- `uiuxAudit()` で戻り値を受け取れる（`{ summary, findings }`）
+
+**他のサイトでも使える**（読み取りのみ・DevToolsのコンソールに貼る）：
+
+```js
+fetch('http://localhost:4322/snippets/js/audit.js')
+  .then(r => r.text()).then(eval).then(() => uiuxAudit({ panel: true }));
+```
+
+### 検査する項目
+
+| ルール | 内容 |
+|---|---|
+| `reflow` | 横スクロールの有無と、はみ出している要素 |
+| `contrast` | **実際の描画色**から計算（半透明・祖先の背景も合成する）。大きい文字は3:1で判定 |
+| `target-size` | 24×24px 未満＝エラー、44×44px 未満＝警告。文中のインラインリンクは除外 |
+| `images` | `width`/`height` 欠落、`alt` 欠落、fold内の `loading="lazy"` |
+| `names` | アイコンのみのボタンの `aria-label`、「こちら」等の曖昧なリンク |
+| `forms` | ラベル、`autocomplete`、入力欄の16px、submitボタン |
+| `headings` | `<h1>` の有無と個数、見出しレベルの飛び |
+| `document` | viewport の拡大禁止、`lang`、`title`、description |
+| `japanese` | 行間1.5未満（2行以上のみ）、`word-break:break-all`、本文16px未満 |
+| `motion` | `transition: all`、`prefers-reduced-motion` 対応の有無 |
+| `focus` | 実際にフォーカスして見た目が変わるか |
+
+### ⚠️ 限界
+
+**自動検査で拾えるのは全体の一部。** キーボードでの通し操作、読み上げ、
+文章の質、情報の順序は人間が見るしかない。
+`warn` は判断が要る項目（14pxの注記など、文脈によっては妥当）。
+
+現在の実測：`index.html` / `themes.html` / `html/*.html` すべて **error 0**。
+
+> このツール自身にも当初 5件の誤検出があった（[../LESSONS.md](../LESSONS.md) L-010）。
+> **検査ツールを信じすぎない。** 誤検出を放置すると本物の警告まで無視するようになる。
 
 ---
 
@@ -134,9 +185,9 @@ http://localhost:4322/snippets/themes.html
 | 組み合わせ | 比 | 判定 |
 |---|---|---|
 | `#A9786F` ＋ 白文字 | 約 **3.75:1** | 大きい文字は可（3:1）／**通常テキストは不足**（4.5:1 必要） |
-| `#96685F` ＋ 白文字 | 約 **4.7:1** | AA 合格 |
+| `#8E6058` ＋ 白文字 | 約 **4.7:1** | AA 合格 |
 
-そのため塗りつぶしボタンには `#96685F`（`--action-primary`）を使い、
+そのため塗りつぶしボタンには `#8E6058`（`--action-primary`）を使い、
 `#A9786F` は大きい見出しや装飾（`--action-accent`）に回している。
 
 ---

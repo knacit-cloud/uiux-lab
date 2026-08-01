@@ -47,6 +47,7 @@
   --action-primary:       var(--c-teal-700);
   --action-primary-hover: var(--c-teal-800);
   --action-accent:        var(--c-teal-700);   /* 第2アクセントを作らない */
+  --text-accent:          var(--c-teal-700);
   --focus-ring:           var(--c-teal-700);
 
   /* --- 書体：サンセリフ。ウェイト差だけで階層を作る --------------------- */
