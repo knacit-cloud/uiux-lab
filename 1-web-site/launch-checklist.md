@@ -27,6 +27,14 @@
 - [ ] 意図しないスクロールバーが出ていない
 - [ ] 画像が全部表示される（パス切れがない）
 - [ ] **長い日本語入力・空データを入れても壊れない**
+- [ ] **fold 内に主要CTAが入っている**（通し試作 F-11 で追加）
+      1280×900 と 375×812 の両方で確認する。目視でなく座標で測る:
+      ```js
+      const r = document.querySelector('.btn').getBoundingClientRect();
+      ({ top: Math.round(r.top), viewport: innerHeight, inFold: r.top < innerHeight })
+      ```
+      ⚠️ 測る前に `scrollTo({top:0, behavior:'instant'})` で戻し、
+      `scrollY === 0` を確認すること（`LESSONS.md` L-014）
 
 ## 2. 中身
 

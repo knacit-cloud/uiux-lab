@@ -76,6 +76,7 @@ http://localhost:4322/snippets/themes.html
 | ファイル | 内容 |
 |---|---|
 | `tokens.css` | 色・余白・角丸・影の意味トークン。ダークモード込み。**ここの原子トークンだけ差し替えて使う** |
+| **`layout.css`** | **Tailwind を使わずに組むための最小セット**（コンテナ/セクション/グリッド/ボタン） |
 | `themes/industrial.css` | テーマ：現場・計測 |
 | `themes/clinical.css` | テーマ：清潔・実直 |
 | `themes/sumi.css` | テーマ：墨・和 |
