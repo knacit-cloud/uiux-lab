@@ -31,6 +31,7 @@
 | 10 | Google Search Essentials | https://developers.google.com/search/docs/essentials | `1-web-site/seo.md`（要件/スパムポリシー/推奨の3層構造） | ⚠️ |
 | 11 | Google SEO Starter Guide | https://developers.google.com/search/docs/fundamentals/seo-starter-guide | `1-web-site/seo.md`（**Googleが効かないと明言した項目**：キーワード密度・meta keywords・文字数・見出し順序・URLのキーワード・E-E-A-T・重複ペナルティ） | ⚠️ |
 | 12 | Anthropic `frontend-design` skill（**Apache-2.0**） | https://github.com/anthropics/skills | `1-web-site/visual-design.md` §0（**AI生成デザインの3デフォルト**）、`process.md` ⑤（計画→批評の2段階、Signature、シャネルの引用）、`LESSONS.md` L-007 | ⚠️ |
+| 13 | Deceptive Design — Types of deceptive pattern（Harry Brignull） | https://www.deceptive.design/types | `0-core/ethics.md`（**18分類の定義**。うちBtoB該当13分類を採用） | ⚠️ |
 
 ---
 
@@ -52,6 +53,9 @@
 | 21 | Shopify Polaris | https://polaris.shopify.com/ | `2-web-app/` 管理画面の実例 |
 | 22 | Atlassian Design System | https://atlassian.design/ | `2-web-app/` 管理画面の実例 |
 | 23 | IBM Carbon Design System | https://carbondesignsystem.com/ | `2-web-app/` データ密度の高い画面 |
+| 24 | **消費者庁 — ダークパターン実態調査**（2025-04-07） | https://www.caa.go.jp/policies/future/icprc/research_010 | `0-core/ethics.md`。**二次情報でのみ確認。原典PDF未照合** — 102サイト調査／4類型／景表法・特商法への抵触の恐れ |
+| 25 | **消費者庁 — 最終確認画面の表示方法**（特商法2022年6月施行） | https://www.caa.go.jp/policies/policy/consumer_transaction/amendment/2021/notice02/index.html | `0-core/ethics.md`。**概要のみ確認**。分量・総額・回数の同一画面表示義務 |
+| 26 | **消費者庁 — 景品表示法とステルスマーケティング**（2023-10-01施行） | https://www.caa.go.jp/policies/policy/representation/fair_labeling | `0-core/ethics.md`。**概要のみ確認**。広告であることを隠した表示は不当表示 |
 
 ---
 

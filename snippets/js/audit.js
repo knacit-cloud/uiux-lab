@@ -355,6 +355,90 @@
     }
   });
 
+  /* --- ダークパターン（機械で判定できるものだけ）--------------------------
+     0-core/ethics.md
+     ⚠️ ここで拾えるのはごく一部。「今だけ」に根拠があるか、
+        顧客の声が実在するかは人間が見るしかない。
+     ------------------------------------------------------------------------ */
+  rule('ethics', 'ダークパターン（機械判定できる範囲）', function (add) {
+    // ① 同意チェックボックスが初期状態でオン（Preselection）
+    var preChecked = [];
+    var boxes = document.querySelectorAll('input[type=checkbox]');
+    for (var i = 0; i < boxes.length; i++) {
+      if (!isVisible(boxes[i])) continue;
+      if (boxes[i].hasAttribute('checked') || boxes[i].defaultChecked) {
+        var lbl = (boxes[i].closest('label') || {}).textContent || boxes[i].name || '';
+        // 同意・購読・規約に関わるものだけを問題にする（設定の既定値は対象外）
+        if (/同意|承諾|規約|プライバシー|メルマガ|配信|受け取|購読|agree|consent|subscribe|newsletter/i
+            .test(lbl + ' ' + boxes[i].name + ' ' + boxes[i].id)) {
+          preChecked.push(selectorOf(boxes[i]));
+        }
+      }
+    }
+    if (preChecked.length) {
+      add('error', preChecked.length + ' 件の同意チェックが初期状態でオン（Preselection）', preChecked);
+    }
+
+    // ② 二重否定の文言（Trick Wording）
+    var tricky = [];
+    var labels = document.querySelectorAll('label, .form-hint, p');
+    for (var j = 0; j < labels.length && tricky.length < 5; j++) {
+      var t = (labels[j].textContent || '').trim();
+      if (!t || t.length > 120) continue;
+      if (/(受け取らない|希望しない|停止しない|解除しない).{0,12}(場合|とき|なら).{0,20}(チェック|外す|オフ)/.test(t)) {
+        tricky.push(selectorOf(labels[j]));
+      }
+    }
+    if (tricky.length) {
+      add('warn', '二重否定の可能性がある文言（Trick Wording）。肯定形に直す', tricky);
+    }
+
+    // ③ 根拠のない緊急性・希少性（Fake Urgency / Fake Scarcity）
+    //    機械では「本当かどうか」は判定できない。存在を知らせて人間に確認させる。
+    //    ⚠️ 要素の矩形で可視判定すると、幅0などの理由で取りこぼす。
+    //       文言を探すのが目的なので、テキストノードを直接走査する。
+    var urgent = [];
+    var URGENCY = /(今だけ|本日限り|残りわずか|残り\s*\d+\s*(名|社|枠|席|点)|先着\s*\d+|まもなく終了|期間限定|お急ぎください)/;
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        var p = node.parentElement;
+        if (!p || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(p.tagName)) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var tn;
+    while ((tn = walker.nextNode()) && urgent.length < 6) {
+      var s2 = (tn.nodeValue || '').trim();
+      if (!s2 || s2.length > 80) continue;
+      if (URGENCY.test(s2)) urgent.push(selectorOf(tn.parentElement));
+    }
+    if (urgent.length) {
+      add('warn', '緊急性・希少性の表現がある。**根拠が実在するか人間が確認すること**', urgent);
+    }
+
+    // ④ 解約・退会の導線が他より目立たなくされていないか（Obstruction / Visual Interference）
+    var links = document.querySelectorAll('a[href], button');
+    var quiet = [];
+    var sizes = [];
+    for (var m = 0; m < links.length; m++) {
+      if (isVisible(links[m])) sizes.push(parseFloat(getComputedStyle(links[m]).fontSize) || 16);
+    }
+    var median = sizes.sort(function (a, b) { return a - b; })[Math.floor(sizes.length / 2)] || 16;
+    for (var n = 0; n < links.length; n++) {
+      var lk = links[n];
+      if (!isVisible(lk)) continue;
+      var txt = (lk.textContent || '').trim();
+      if (!/解約|退会|キャンセル|停止|削除|cancel|unsubscribe|delete account/.test(txt)) continue;
+      var fs2 = parseFloat(getComputedStyle(lk).fontSize) || 16;
+      if (fs2 < median * 0.85) quiet.push(selectorOf(lk) + ' — ' + fs2 + 'px（他は中央値 ' + median + 'px）');
+    }
+    if (quiet.length) {
+      add('warn', '解約・退会の導線が他より小さい（Obstruction の疑い）', quiet);
+    }
+  });
+
   /* --- 見出し階層 --------------------------------------------------------- */
   rule('headings', '見出しの階層', function (add) {
     var hs = [].filter.call(document.querySelectorAll('h1,h2,h3,h4,h5,h6'), isVisible);

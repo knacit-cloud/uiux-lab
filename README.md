@@ -60,6 +60,7 @@ node .claude/server.js
 |---|---|
 | `principles.md` | Nielsen 10ヒューリスティクス、Hick / Fitts / Jakob 等の法則、認知負荷 |
 | `accessibility.md` | WCAG 2.2 の数値（4.5:1 / 24×24px / 320px / 200%）、セマンティクス、モーション |
+| `ethics.md` | **ダークパターン13分類、日本の法規制（景表法・特商法・ステマ規制）、誠実な代替** |
 | `typography.md` | 日本語を含む文字設計。16px下限・行間1.5〜1.75・字間・和欧混植・禁則 |
 | `color-spacing.md` | 意味トークン設計、ダークモード、8pxグリッド、近接の原則 |
 | `implementation-checklist.md` | Web実装の通しチェック（Vercel WIG ベース＋日本語向け追記） |
