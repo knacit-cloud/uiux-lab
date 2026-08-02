@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>現場から帰る前に、見積を終わらせる｜造園・外構向け（架空のサービス）</title>
+<meta name="description" content="現場写真と音声メモから、その日のうちに見積書ができます。樹木・石材・土工の単価は、御社の過去見積から取り込みます。">
+
+<link rel="stylesheet" href="../../snippets/css/japanese-text.css">
+<link rel="stylesheet" href="../../snippets/css/focus-ring.css">
+<link rel="stylesheet" href="../../snippets/css/reduced-motion.css">
+<link rel="stylesheet" href="theme.css">
+
+<style>
+  /* Tailwind を使わない。トークンだけで組めるかの検証も兼ねる */
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg-page); color: var(--text-primary);
+         font-family: var(--font-sans); }
+
+  .wrap { max-width: var(--container); margin-inline: auto; padding-inline: 1.5rem; }
+  .prose { max-width: var(--container-prose); }
+
+  section { padding-block: var(--space-section); }
+  @media (min-width: 768px) { section { padding-block: var(--space-section-lg); } }
+  section + section { border-top: 1px solid var(--border-default); }
+
+  .eyebrow { font-size: .8125rem; letter-spacing: .1em; color: var(--text-accent);
+             font-weight: 600; margin: 0 0 .75rem; }
+  h1 { font-size: clamp(1.75rem, 5vw, 2.875rem); line-height: 1.3; margin: 0 0 1.25rem;
+       letter-spacing: .01em; text-wrap: balance; font-weight: 700; }
+  h2 { font-size: clamp(1.375rem, 3vw, 1.875rem); line-height: 1.4; margin: 0 0 1rem;
+       letter-spacing: .02em; text-wrap: balance; font-weight: 700; }
+  h3 { font-size: 1.0625rem; margin: 0 0 .5rem; font-weight: 600; }
+  p  { color: var(--text-muted); margin: 0 0 1rem; }
+  .lead { font-size: 1.0625rem; color: var(--text-muted); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center;
+         min-height: 52px; padding-inline: 1.75rem; border-radius: var(--radius-sm);
+         background: var(--action-primary); color: var(--text-on-accent);
+         font: inherit; font-weight: 600; text-decoration: none;
+         transition: background-color 150ms var(--ease-out); }
+  .btn:hover { background: var(--action-primary-hover); }
+  .btn-quiet { background: transparent; color: var(--text-link);
+               text-decoration: underline; text-underline-offset: 4px;
+               min-height: 44px; padding-inline: .25rem; font-weight: 500; }
+  .btn-quiet:hover { background: transparent; color: var(--text-primary); }
+  .note { font-size: .875rem; color: var(--text-muted); margin-top: .875rem; }
+
+  .grid { display: grid; gap: 1.25rem; }
+  @media (min-width: 640px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 768px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+
+  .card { background: var(--bg-surface); border: 1px solid var(--border-default);
+          border-radius: var(--radius-md); padding: 1.5rem; }
+  .check { display: flex; gap: .875rem; }
+  .check svg { flex: 0 0 auto; margin-top: .2rem; color: var(--action-accent); }
+
+  ol.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+  ol.steps li { counter-increment: s; display: grid; grid-template-columns: 2.5rem 1fr;
+                gap: 1rem; padding-block: 1.25rem; border-bottom: 1px solid var(--border-default); }
+  ol.steps li::before { content: counter(s); font-family: var(--font-num);
+    font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text-on-accent);
+    background: var(--action-primary); width: 2.25rem; height: 2.25rem;
+    border-radius: var(--radius-sm); display: grid; place-items: center; font-size: .9375rem; }
+
+  details { border-bottom: 1px solid var(--border-default); }
+  summary { cursor: pointer; list-style: none; padding-block: 1.125rem;
+            font-weight: 600; display: flex; justify-content: space-between;
+            align-items: center; gap: 1rem; min-height: 44px; }
+  summary::-webkit-details-marker { display: none; }
+  details[open] summary svg { transform: rotate(45deg); }
+  summary svg { transition: transform 200ms var(--ease-out); color: var(--text-muted); flex: 0 0 auto; }
+  details .a { padding-bottom: 1.125rem; }
+  details .a p { margin: 0; }
+
+  .final { background: var(--c-stone-900); color: #fff; }
+  .final h2, .final p { color: #fff; }
+  .final .btn { background: #fff; color: var(--c-moss-700); }
+  .final .btn:hover { background: var(--c-stone-100); }
+  .final .note { color: #E4E5DF; }
+
+  footer { padding-block: 2.5rem; font-size: .875rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">本文へスキップ</a>
+
+<main id="main">
+
+<!-- 1. ヒーロー ＋ 2. 軽い信頼 ------------------------------------------- -->
+<section>
+  <div class="wrap">
+    <div class="prose">
+      <p class="eyebrow">造園・外構会社向け</p>
+      <h1>現場から帰る前に、見積を終わらせる</h1>
+      <p class="lead">
+        現場写真と音声メモから、その日のうちに見積書ができます。<br>
+        樹木・石材・土工の単価は、御社の過去見積から取り込みます。
+      </p>
+      <p style="margin-top:2rem">
+        <a class="btn" href="#cta">見積を1件、無料で作らせてください</a>
+      </p>
+      <p class="note">
+        費用はかかりません・お預かりするのは1件分だけ・営業のご連絡はしません
+      </p>
+    </div>
+
+    <!-- 軽い信頼要素。証拠を出してから本題に入る（trust-btob.md） -->
+    <table class="quote-table" style="margin-top:3.5rem;max-width:34rem">
+      <tbody>
+        <tr><th scope="row">対応する業種</th><td class="num">造園・外構のみ</td></tr>
+        <tr><th scope="row">代表の実務経験</th><td class="num"><span class="figure">7</span> 年</td></tr>
+        <tr><th scope="row">初回のご返答</th><td class="num"><span class="figure">3</span> 営業日以内</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 3. 課題 ------------------------------------------------------------- -->
+<section>
+  <div class="wrap">
+    <div class="prose" style="margin-bottom:2.5rem">
+      <p class="eyebrow">よくある状態</p>
+      <h2>見積が、いつも後回しになっていませんか</h2>
+      <p>当てはまるものが2つ以上あれば、個人の段取りではなく手順の問題です。</p>
+    </div>
+    <div class="grid grid-2">
+      <div class="card check">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><h3>現場から帰ってから見積を書いている</h3>
+        <p style="margin:0">作成が夜や休日に押し出されている。</p></div>
+      </div>
+      <div class="card check">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><h3>同じような工事でも毎回ゼロから作っている</h3>
+        <p style="margin:0">過去の見積を探す時間が積み上がる。</p></div>
+      </div>
+      <div class="card check">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><h3>単価を思い出せず、前の見積を探している</h3>
+        <p style="margin:0">案件ごとに単価がばらついてしまう。</p></div>
+      </div>
+      <div class="card check">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><h3>見積が遅れて、失注したことがある</h3>
+        <p style="margin:0">早く出せば取れていた案件がある。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 解決策 ----------------------------------------------------------- -->
+<section>
+  <div class="wrap">
+    <div class="prose" style="margin-bottom:2.5rem">
+      <p class="eyebrow">やること</p>
+      <h2>手順を3つに分けます</h2>
+    </div>
+    <div class="grid grid-3">
+      <div>
+        <h3>過去見積から単価表を作る</h3>
+        <p>最初に10件お預かりして、御社の相場をそのまま取り込みます。単価を新しく作る作業はありません。</p>
+      </div>
+      <div>
+        <h3>現場で撮る・話す</h3>
+        <p>写真と音声メモを現場で残します。事務所に戻ってからの入力をなくすのが狙いです。</p>
+      </div>
+      <div>
+        <h3>その日のうちに出す</h3>
+        <p>下書きが自動で作られます。確認して直すだけ。出力は Excel なので、今の様式のまま使えます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 流れ ------------------------------------------------------------- -->
+<section>
+  <div class="wrap">
+    <div class="prose" style="margin-bottom:2rem">
+      <p class="eyebrow">進め方</p>
+      <h2>お試しから、続けるかを決めるまで</h2>
+    </div>
+    <ol class="steps prose" style="max-width:44rem">
+      <li><div><h3>無料で1件つくる</h3>
+        <p style="margin:0">現場写真をお送りください。3営業日以内に見積書をお返しします。費用はかかりません。</p></div></li>
+      <li><div><h3>単価表を取り込む</h3>
+        <p style="margin:0">過去の見積を10件ほどお預かりします。取り込みは初回無料です。</p></div></li>
+      <li><div><h3>現場で1ヶ月使ってみる</h3>
+        <p style="margin:0">実際の案件で使っていただきます。合わなければここで止めて構いません。</p></div></li>
+      <li><div><h3>続けるかを決める</h3>
+        <p style="margin:0"><strong>やめても費用はかかりません。</strong>お預かりしたデータは返却または削除します。</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 6. 料金 ------------------------------------------------------------- -->
+<section>
+  <div class="wrap">
+    <div class="prose" style="margin-bottom:2rem">
+      <p class="eyebrow">料金</p>
+      <h2>月額のみ。初期費用はありません</h2>
+    </div>
+    <table class="quote-table" style="max-width:34rem">
+      <thead>
+        <tr><th scope="col">項目</th><th scope="col" class="num">金額（税抜）</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">基本料金（5名まで）</th><td class="num">15,000 円 / 月</td></tr>
+        <tr><th scope="row">6名以降 1名につき</th><td class="num">2,000 円 / 月</td></tr>
+        <tr><th scope="row">初期費用</th><td class="num">0 円</td></tr>
+        <tr><th scope="row">単価表の取り込み（初回）</th><td class="num">0 円</td></tr>
+        <tr><th scope="row">最低契約期間</th><td class="num">なし</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td>5名の場合の月額</td><td class="num">15,000 円</td></tr>
+      </tfoot>
+    </table>
+    <p class="note" style="max-width:34rem">
+      変わるのは利用人数だけです。案件数や見積の件数では変わりません。
+    </p>
+  </div>
+</section>
+
+<!-- 7. FAQ -------------------------------------------------------------- -->
+<section>
+  <div class="wrap">
+    <div class="prose" style="margin-bottom:1.5rem">
+      <p class="eyebrow">よくあるご質問</p>
+      <h2>先に聞かれることをまとめました</h2>
+    </div>
+    <div class="prose" style="max-width:44rem;border-top:1px solid var(--border-default)">
+      <details>
+        <summary>単価は自分で入れるのですか？
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke-linecap="round"/></svg>
+        </summary>
+        <div class="a"><p>いいえ。過去の見積から取り込みます。手入力していただく必要はありません。</p></div>
+      </details>
+      <details>
+        <summary>いま使っている Excel はどうなりますか？
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke-linecap="round"/></svg>
+        </summary>
+        <div class="a"><p>そのまま使えます。出力も Excel です。様式を変えていただく必要はありません。</p></div>
+      </details>
+      <details>
+        <summary>途中でやめられますか？
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke-linecap="round"/></svg>
+        </summary>
+        <div class="a"><p>いつでもやめられます。日割りで返金します。解約はメール1通で完了し、お電話での引き止めはしません。</p></div>
+      </details>
+      <details>
+        <summary>現場でスマホから使えますか？
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke-linecap="round"/></svg>
+        </summary>
+        <div class="a"><p>はい。写真と音声だけで記録できます。手袋のままでも操作できるよう、ボタンは大きくしています。</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 8. 会社・人 ＋ 最終CTA ----------------------------------------------- -->
+<section>
+  <div class="wrap prose">
+    <p class="eyebrow">つくっている人</p>
+    <h2>造園会社で7年、見積を書いていました</h2>
+    <p>
+      現場から戻って見積を書く時間が、いちばん削れるところだと思っています。
+      2026年に独立して、このサービスだけを作っています。
+    </p>
+    <p>
+      <strong style="color:var(--text-primary)">
+        正直に書きます。まだ3社にしか使っていただいていません。
+      </strong>
+      だからこそ、1件目を無料で作らせてください。合わなければそれで終わりで構いません。
+    </p>
+  </div>
+</section>
+
+<section id="cta" class="final">
+  <div class="wrap prose" style="text-align:center;margin-inline:auto">
+    <h2>まず1件、無料で作らせてください</h2>
+    <p>現場写真をお送りいただければ、3営業日以内に見積書をお返しします。</p>
+    <p style="margin-top:2rem">
+      <a class="btn" href="#">見積を1件、無料で作らせてください</a>
+    </p>
+    <p class="note">費用はかかりません・営業のご連絡はしません</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0">
+      ⚠️ これは <strong>uiux-lab の通し試作</strong>です。架空のサービスで、実在しません。
+      数字・経歴・事例はすべて架空です。
+    </p>
+  </div>
+</footer>
+
+<script src="../../snippets/js/audit.js" defer></script>
+</body>
+</html>

@@ -33,10 +33,22 @@
      5. **HTTPS ページから HTTP localhost の script は読めない**（混在コンテンツ）。
         他サイトで使うときはこのファイルの中身を直接コンソールに貼る
 
-   測定前の推奨手順:
-     await (async()=>{const H=innerHeight,B=document.body.scrollHeight;
-       for(let y=0;y<B;y+=H*0.8){scrollTo(0,y);await new Promise(r=>setTimeout(r,110))}
-       scrollTo(0,0);await new Promise(r=>setTimeout(r,700))})();
+     6. **スクロールは必ず behavior:'instant' で行う。**
+        対象ページが `scroll-behavior: smooth` を持っていると、
+        scrollTo(0,0) がアニメーションし、**戻り切る前に測定してしまう**。
+        実際に fold 内のCTAを 1件 → 0件 と誤測定した（LESSONS L-014）
+
+   測定前の必須手順:
+     await (async()=>{
+       const H=innerHeight,B=document.body.scrollHeight;
+       for(let y=0;y<B;y+=H*0.8){
+         scrollTo({top:y,behavior:'instant'});
+         await new Promise(r=>setTimeout(r,110));
+       }
+       scrollTo({top:0,behavior:'instant'});
+       await new Promise(r=>setTimeout(r,500));
+       if (scrollY !== 0) throw new Error('スクロールが戻っていない。測定中止');
+     })();
      uiuxMetrics();
    ========================================================================== */
 

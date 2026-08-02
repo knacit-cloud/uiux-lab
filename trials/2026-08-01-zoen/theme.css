@@ -1,0 +1,115 @@
+/* ==========================================================================
+   trial theme — 造園・外構向け
+   --------------------------------------------------------------------------
+   process.md ⑤ の第1段階（計画）で決めた4項目をコードにしたもの。
+
+   Color     石のニュートラル ＋ 下草の深緑1色のみ
+   Type      ゴシック。数字は等幅
+   Layout    背景色の交互ではなく、罫線で区切る（見積書の様式）
+   Signature 見積書の組版を借りた数値表示（右揃え・等幅・合計欄の罫線）
+
+   ⚠️ AIデフォルト回避の確認（visual-design.md §0）
+     ①クリーム＋セリフ＋テラコッタ … 該当しない（グレー基調・ゴシック・緑）
+     ②ほぼ黒＋アシッド1色         … 該当しない（明るい基調）
+     ③新聞紙面風・角丸ゼロ・多段組 … **近い**。罫線を多用するため。
+       → 1カラム・角丸4px・数字主役、で区別。多段組みにしない
+   ========================================================================== */
+
+:root {
+  /* --- 原子：石と墨と下草 ------------------------------------------------- */
+  --c-stone-0:   #FFFFFF;
+  --c-stone-50:  #FAFAF8;
+  --c-stone-100: #F2F2EE;
+  --c-stone-200: #E4E5DF;
+  --c-stone-300: #D8DAD3;
+  --c-stone-500: #8B8F86;   /* 部品の境界用。実測は audit.js で確認する */
+  --c-stone-600: #5E625A;
+  --c-stone-900: #22251F;   /* 墨。わずかに緑を含む */
+
+  --c-moss-600:  #2F5D3A;   /* 下草。白文字で 7.6:1 */
+  --c-moss-700:  #26492E;
+  --c-moss-50:   #EEF3EF;
+
+  /* --- 意味 --------------------------------------------------------------- */
+  --text-primary:   var(--c-stone-900);
+  --text-muted:     var(--c-stone-600);
+  --text-on-accent: #FFFFFF;
+  --text-link:      var(--c-moss-600);
+  --text-accent:    var(--c-moss-600);   /* 小さい文字用（4.5:1 を満たす） */
+
+  --bg-page:      var(--c-stone-50);
+  --bg-surface:   var(--c-stone-0);
+  --bg-surface-2: var(--c-stone-100);
+
+  --border-default: var(--c-stone-300);   /* 装飾・区切り */
+  --border-strong:  var(--c-stone-500);   /* 部品の境界（3:1 必要） */
+
+  --action-primary:       var(--c-moss-600);
+  --action-primary-hover: var(--c-moss-700);
+  --action-accent:        var(--c-moss-600);
+  --focus-ring:           var(--c-moss-600);
+
+  /* --- 書体：ゴシックのみ。表示用セリフを使わない ------------------------ */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont,
+               'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+  --font-num:  ui-monospace, SFMono-Regular, Menlo, 'Roboto Mono', monospace;
+
+  /* --- 形：角丸は控えめ。影は使わず罫線で区切る -------------------------- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* --- 余白 --------------------------------------------------------------- */
+  --space-section: 5rem;      /* モバイル */
+  --space-section-lg: 7rem;   /* デスクトップ */
+
+  --container: 60rem;
+  --container-prose: 38em;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   シグネチャー：見積書の組版
+   数字は右揃え・等幅。合計欄は上に罫線。これがこのページの記憶点。
+   ========================================================================== */
+
+.quote-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+.quote-table th,
+.quote-table td {
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid var(--border-default);
+  text-align: left;
+}
+.quote-table th {
+  font-weight: 500;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+}
+.quote-table .num {
+  text-align: right;
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+/* 合計欄：見積書と同じく上に二重の区切り */
+.quote-table tfoot td {
+  border-top: 2px solid var(--text-primary);
+  border-bottom: none;
+  padding-top: 0.875rem;
+  font-weight: 600;
+}
+
+/* 数値の強調表示（実績値など） */
+.figure {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
