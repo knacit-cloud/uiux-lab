@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>セクション追補 — uiux-lab snippets</title>
+<meta name="description" content="layout-patterns.md にあってコードがなかった4つの型（Bento / 料金比較表 / モバイル追従CTA / ロゴウォール）。">
+
+<!-- ⚠️ このページは Tailwind を使わない。
+     css/layout.css だけで組めるかの検証を兼ねている（通し試作 F-10） -->
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/japanese-text.css">
+<link rel="stylesheet" href="../css/focus-ring.css">
+<link rel="stylesheet" href="../css/reduced-motion.css">
+
+<style>
+  h1 { font-size: 1.75rem; margin: 0 0 .5rem; }
+  h2 { font-size: 1.5rem; margin: 0 0 .75rem; }
+  h3 { font-size: 1.0625rem; margin: 0 0 .5rem; }
+  .demo { border: 1px solid var(--border-default); border-radius: var(--radius-md);
+          padding: 1.5rem; background: var(--bg-surface); margin-block: 1.5rem; }
+  .memo { background: var(--bg-surface-2); border-radius: var(--radius-md);
+          padding: 1.25rem 1.5rem; font-size: .9375rem; }
+  .memo ul { margin: .5rem 0 0; padding-left: 1.2em; }
+  .memo li { margin-block: .35rem; color: var(--text-muted); }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: .9em;
+         background: var(--bg-surface-2); padding: .1em .35em; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">本文へスキップ</a>
+
+<main id="main" class="wrap section">
+
+<h1>セクション追補</h1>
+<p class="note">
+  <code>1-web-site/layout-patterns.md</code> と <code>responsive.md</code> に
+  記載があってコードがなかった4つの型。<strong>Tailwind を使わず
+  <code>css/layout.css</code> だけで組んでいる。</strong>
+</p>
+
+<!-- 追従CTAの目印。実際のページでは「ヒーローの直後」に置く。
+     ここより下へスクロールすると追従CTAが出る -->
+<div id="ctaSentinel" aria-hidden="true" style="height:1px"></div>
+
+<!-- ==================================================================
+     3-B. Bento グリッド
+     ================================================================== -->
+<section class="section section--ruled">
+  <p class="eyebrow">Layout 3-B</p>
+  <h2>Bento グリッド</h2>
+  <p><strong>要素の重要度に実際に差があるときだけ使う。</strong>
+     同格のものを無理に Bento にすると、意味のない大小差ができて逆に読みにくい。</p>
+
+<!-- ==================== COPY FROM HERE ==================== -->
+<style>
+  .bento { display: grid; gap: 1rem; }
+  @media (min-width: 768px) {
+    .bento {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, minmax(140px, auto));
+    }
+    .bento > :first-child { grid-column: span 2; grid-row: span 2; }
+  }
+  .bento > * {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: flex; flex-direction: column; justify-content: flex-end;
+  }
+</style>
+
+<div class="bento">
+  <div>
+    <h3>過去の見積から単価表を作る</h3>
+    <p class="note" style="margin:0">
+      最初に10件お預かりして、御社の相場をそのまま取り込みます。
+    </p>
+  </div>
+  <div><h3>現場で撮る</h3><p class="note" style="margin:0">写真と音声だけ。</p></div>
+  <div><h3>その日に出す</h3><p class="note" style="margin:0">下書きが自動で作られます。</p></div>
+  <div><h3>Excel のまま</h3><p class="note" style="margin:0">様式を変えずに使えます。</p></div>
+  <div><h3>いつでもやめられる</h3><p class="note" style="margin:0">最低契約期間なし。</p></div>
+</div>
+<!-- ===================== COPY TO HERE ===================== -->
+
+  <div class="memo">
+    <strong>設計メモ</strong>
+    <ul>
+      <li><strong>モバイルでは1カラムに落とす。</strong>小さい画面で面積差は表現できない</li>
+      <li>面積差は<strong>重要度が実際に違うときだけ</strong>。同格なら均等グリッドにする</li>
+      <li><code>justify-content: flex-end</code> で下揃えにすると、高さが違っても見出しの位置が揃う</li>
+      <li>影を付けない。背景色だけで区切る（<code>visual-design.md</code> §6）</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================================================================
+     5-B. 料金比較表（横スクロール）
+     ================================================================== -->
+<section class="section section--ruled">
+  <p class="eyebrow">Layout 5-B</p>
+  <h2>料金比較表（横スクロール）</h2>
+  <p>プランが4つ以上、または機能差が細かいとき。
+     <strong>モバイルで縦積みに崩さない</strong>（比較できなくなる）。</p>
+
+<!-- ==================== COPY FROM HERE ==================== -->
+<style>
+  .table-scroll {
+    /* 画面端までスクロールさせる。見切れが「まだ続く」の合図になる */
+    margin-inline: -1.5rem; padding-inline: 1.5rem;
+    overflow-x: auto;
+    /* iOS で慣性スクロールを効かせる */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  .table-scroll:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .cmp { width: 100%; min-width: 640px; border-collapse: collapse; font-size: .9375rem; }
+  .cmp th, .cmp td { padding: .75rem 1rem; border-bottom: 1px solid var(--border-default);
+                     text-align: left; }
+  .cmp thead th { font-size: .8125rem; color: var(--text-muted); font-weight: 600;
+                  letter-spacing: .04em; white-space: nowrap; }
+  .cmp tbody th { font-weight: 500; }
+  .cmp .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .cmp .yes { color: var(--action-primary); font-weight: 600; }
+  .cmp .no  { color: var(--text-muted); }
+  /* 推しプランの列を目立たせる */
+  .cmp .pick { background: var(--bg-surface-2); }
+</style>
+
+<!-- スクロールできる領域はキーボードでも操作できる必要がある。
+     tabindex="0" + role="region" + aria-label をセットで付ける -->
+<div class="table-scroll" tabindex="0" role="region" aria-label="料金プランの比較表（横にスクロールできます）">
+  <table class="cmp">
+    <caption class="visually-hidden">プラン別の料金と機能の比較</caption>
+    <thead>
+      <tr>
+        <th scope="col">項目</th>
+        <th scope="col" class="num">お試し</th>
+        <th scope="col" class="num pick">標準<span class="note">（おすすめ）</span></th>
+        <th scope="col" class="num">拡張</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">月額（税抜）</th>
+        <td class="num">0 円</td><td class="num pick">15,000 円</td><td class="num">35,000 円</td></tr>
+      <tr><th scope="row">利用人数</th>
+        <td class="num">1 名</td><td class="num pick">5 名</td><td class="num">20 名</td></tr>
+      <tr><th scope="row">見積の作成</th>
+        <td class="num"><span class="yes" aria-label="対応">✓</span> 1件のみ</td>
+        <td class="num pick"><span class="yes" aria-label="対応">✓</span> 無制限</td>
+        <td class="num"><span class="yes" aria-label="対応">✓</span> 無制限</td></tr>
+      <tr><th scope="row">単価表の取り込み</th>
+        <td class="num"><span class="no" aria-label="非対応">—</span></td>
+        <td class="num pick"><span class="yes" aria-label="対応">✓</span></td>
+        <td class="num"><span class="yes" aria-label="対応">✓</span></td></tr>
+      <tr><th scope="row">最低契約期間</th>
+        <td class="num">なし</td><td class="num pick">なし</td><td class="num">なし</td></tr>
+    </tbody>
+  </table>
+</div>
+<!-- ===================== COPY TO HERE ===================== -->
+
+  <div class="memo">
+    <strong>設計メモ</strong>
+    <ul>
+      <li><strong>縦積みに崩さない。</strong>比較が目的なので、横スクロールが正しい</li>
+      <li><code>margin-inline: -1.5rem</code> ＋ <code>padding-inline</code> で
+          <strong>画面端まで</strong>スクロールさせる。見切れが「まだ続く」の合図</li>
+      <li><strong>スクロール領域には <code>tabindex="0"</code> ＋ <code>role="region"</code> ＋
+          <code>aria-label</code> が必要。</strong>これがないとキーボードで横スクロールできない</li>
+      <li><code>&lt;th scope="col"&gt;</code> / <code>scope="row"</code> を正しく付ける</li>
+      <li>数値列に <code>tabular-nums</code>。桁が揃わないと比較できない</li>
+      <li><code>✓</code> / <code>—</code> は記号だけだと読み上げられない。
+          <code>aria-label</code> で意味を付ける（<strong>色だけで伝えない</strong>）</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================================================================
+     6-B. ロゴウォール
+     ================================================================== -->
+<section class="section section--ruled">
+  <p class="eyebrow">Layout 6-B</p>
+  <h2>ロゴウォール</h2>
+  <p><strong>5社未満なら並べない。</strong>少なさが露呈する。
+     出せないなら数字と流れの透明性で代替する（<code>trust-btob.md</code>）。</p>
+
+<!-- ==================== COPY FROM HERE ==================== -->
+<style>
+  .logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+           gap: 2rem 3rem; }
+  .logos img,
+  .logos .logo {
+    /* 幅ではなく高さを揃える。視覚的な大きさが揃う */
+    height: 32px; width: auto;
+    /* グレースケール＋透明度でロゴの色バラつきを吸収する */
+    filter: grayscale(1); opacity: .65;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .logos img, .logos .logo { transition: opacity 200ms var(--ease-out), filter 200ms var(--ease-out); }
+  }
+  .logos a:hover img, .logos a:hover .logo { filter: grayscale(0); opacity: 1; }
+</style>
+
+<ul class="logos" style="list-style:none;margin:0;padding:0">
+  <!-- 実際は <img src="…" width="120" height="32" alt="株式会社◯◯"> -->
+  <li><span class="logo" style="display:grid;place-items:center;background:var(--bg-surface-2);
+      padding-inline:1rem;border-radius:4px;font-size:.8125rem;color:var(--text-muted)">株式会社A</span></li>
+  <li><span class="logo" style="display:grid;place-items:center;background:var(--bg-surface-2);
+      padding-inline:1rem;border-radius:4px;font-size:.8125rem;color:var(--text-muted)">B工業</span></li>
+  <li><span class="logo" style="display:grid;place-items:center;background:var(--bg-surface-2);
+      padding-inline:1rem;border-radius:4px;font-size:.8125rem;color:var(--text-muted)">C造園</span></li>
+  <li><span class="logo" style="display:grid;place-items:center;background:var(--bg-surface-2);
+      padding-inline:1rem;border-radius:4px;font-size:.8125rem;color:var(--text-muted)">D建設</span></li>
+  <li><span class="logo" style="display:grid;place-items:center;background:var(--bg-surface-2);
+      padding-inline:1rem;border-radius:4px;font-size:.8125rem;color:var(--text-muted)">E緑化</span></li>
+  <li><span class="logo" style="display:grid;place-items:center;background:var(--bg-surface-2);
+      padding-inline:1rem;border-radius:4px;font-size:.8125rem;color:var(--text-muted)">F開発</span></li>
+</ul>
+<!-- ===================== COPY TO HERE ===================== -->
+
+  <div class="memo">
+    <strong>設計メモ</strong>
+    <ul>
+      <li><strong>高さを揃える</strong>（幅ではない）。視覚的な大きさが揃う</li>
+      <li>グレースケール＋透明度で、ロゴの色のバラつきを吸収する</li>
+      <li><code>&lt;img&gt;</code> には <code>width</code>/<code>height</code> と会社名の <code>alt</code></li>
+      <li><strong>掲載許諾を取ってから出す。</strong>取引のない企業のロゴを出すのは
+          Fake Social Proof（<code>0-core/ethics.md</code>）</li>
+      <li>5社未満なら並べない</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================================================================
+     モバイル追従CTA
+     ================================================================== -->
+<section class="section section--ruled" id="sticky-demo">
+  <p class="eyebrow">Responsive</p>
+  <h2>モバイル追従CTA</h2>
+  <p>幅を <strong>768px 未満</strong>にして、このセクションより下へスクロールすると
+     画面下部に出ます。<strong>fold 内では出しません</strong>（ヒーローのCTAと重複するため）。</p>
+
+<!-- ==================== COPY FROM HERE ==================== -->
+<style>
+  .sticky-cta {
+    position: fixed; inset-inline: 0; bottom: 0; z-index: 40;
+    background: color-mix(in srgb, var(--bg-surface) 95%, transparent);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border-default);
+    padding: .75rem 1rem;
+    /* ホームバーに隠れないようにする。viewport-fit=cover が必要 */
+    padding-bottom: calc(.75rem + env(safe-area-inset-bottom));
+  }
+  .sticky-cta .btn { width: 100%; }
+  /* デスクトップには出さない */
+  @media (min-width: 768px) { .sticky-cta { display: none; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .sticky-cta { transition: transform 250ms var(--ease-out); }
+    .sticky-cta[hidden] { display: block; transform: translateY(100%); }
+  }
+</style>
+
+<!-- ⚠️ 目印は「ヒーローの直後」に置く。★このページでは冒頭に配置済み★
+     ・背の高いセクションを監視対象にしない。
+       下までスクロールしてもまだ交差したままで、CTAが出ない（実際に踏んだ）
+     ・目印より下に置くと、そもそも出ない
+     <div id="ctaSentinel" aria-hidden="true" style="height:1px"></div>
+-->
+
+<div class="sticky-cta" id="stickyCta" hidden>
+  <a class="btn" href="#main">見積を1件、無料で作らせてください</a>
+</div>
+
+<script>
+(function () {
+  var cta = document.getElementById('stickyCta');
+  var sentinel = document.getElementById('ctaSentinel');
+  if (!cta || !sentinel) return;
+
+  // 出すのは「目印を通り過ぎた後」だけ。
+  //   目印が見えている / まだ下にある → 隠す（fold 内なので出さない）
+  //   目印が上に流れていった          → 出す
+  function update() {
+    cta.hidden = sentinel.getBoundingClientRect().top > 0;
+  }
+
+  var ioFired = false;
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      ioFired = true;
+      var e = entries[0];
+      cta.hidden = e.isIntersecting || e.boundingClientRect.top > 0;
+    }, { threshold: 0 }).observe(sentinel);
+  }
+
+  // ⚠️ フォールバック（実際に必要だった）
+  //   IntersectionObserver が「あるのに発火しない」環境が存在する。
+  //   1秒待って1度も発火しなければ、scroll イベントに切り替える。
+  //   motion.md は「scroll で毎フレーム計算しない」と言っているので、
+  //   ここでは間引いて呼ぶ。
+  window.setTimeout(function () {
+    if (ioFired) return;
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      window.setTimeout(function () { update(); ticking = false; }, 100);
+    }, { passive: true });
+    update();
+  }, 1000);
+})();
+</script>
+<!-- ===================== COPY TO HERE ===================== -->
+
+  <div class="memo">
+    <strong>設計メモ</strong>
+    <ul>
+      <li><strong>fold 内では出さない。</strong>ヒーローのCTAと重複する。
+          基準要素を <code>IntersectionObserver</code> で監視する</li>
+      <li><code>env(safe-area-inset-bottom)</code> でホームバーを避ける。
+          <strong><code>viewport-fit=cover</code> が <code>&lt;meta&gt;</code> に必要</strong>
+          （書かないと <code>env()</code> が 0 になる）</li>
+      <li><code>@media (min-width: 768px)</code> でデスクトップには出さない</li>
+      <li>高さを抑える。画面を食う</li>
+      <li>フッターのCTAと重なるなら、フッター到達で隠す</li>
+      <li><code>IntersectionObserver</code> 非対応なら常時表示にフォールバック</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <p class="note">
+    ↑ ここまでスクロールすると追従CTAが出ます（幅 768px 未満のとき）。<br>
+    このページ自体も <code>audit.js</code> で自己検査しています。コンソールを確認してください。
+  </p>
+  <p><a class="btn btn--quiet" href="../index.html">← 見本帳に戻る</a></p>
+</section>
+
+</main>
+
+<script src="../js/audit.js" defer></script>
+</body>
+</html>

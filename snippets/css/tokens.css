@@ -125,6 +125,7 @@
     --text-muted:     #A79C90;
     --text-on-accent: #1A1715;
     --text-link:      var(--c-primary-300);
+    --text-accent:    var(--c-primary-300);   /* ⚠️ 暗背景では明るい方。#8E6058 は 3.37:1 で不足 */
 
     --bg-page:        #1A1715;
     --bg-surface:     #211D1A;
@@ -150,6 +151,7 @@
   --text-muted:     #A79C90;
   --text-on-accent: #1A1715;
   --text-link:      var(--c-primary-300);
+  --text-accent:    var(--c-primary-300);
   --bg-page:        #1A1715;
   --bg-surface:     #211D1A;
   --bg-surface-2:   #262220;

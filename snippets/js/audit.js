@@ -660,7 +660,22 @@
   function auto() {
     var q = new URLSearchParams(location.search).get('audit');
     if (q === '0') return;
-    uiuxAudit({ panel: q === 'panel' });
+
+    // ⚠️ レイアウトが確定する前に走らせると、全要素が「不可視」と判定され、
+    //    「<h1> がない」「横スクロール（幅 0px）」のような嘘の結果を返す。
+    //    実際に発生した。ビューポートが確定するまで待つ。
+    var tries = 0;
+    (function waitForLayout() {
+      var w = document.documentElement.clientWidth;
+      var h = document.documentElement.clientHeight;
+      if (w > 0 && h > 0) { uiuxAudit({ panel: q === 'panel' }); return; }
+      if (++tries > 20) {                       // 約4秒あきらめる
+        console.warn('[uiux-audit] ビューポートが確定しないため自動検査を中止しました。' +
+                     '手動で uiuxAudit() を実行してください。');
+        return;
+      }
+      setTimeout(waitForLayout, 200);
+    })();
   }
 
   if (document.readyState === 'complete') setTimeout(auto, 0);

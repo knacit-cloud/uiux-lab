@@ -104,6 +104,7 @@ http://localhost:4322/snippets/themes.html
 | `faq-details.html` | `<details>` ベースのFAQ。JS不要 |
 | `form-contact.html` | 問い合わせフォーム。項目5つ・インライン検証つき |
 | `meta-head.html` | `<head>` テンプレート（OGP・構造化データ・preload） |
+| **`sections-extra.html`** | **Bento / 料金比較表（横スクロール）/ ロゴウォール / モバイル追従CTA**。Tailwind 不使用 |
 
 `<!-- COPY FROM HERE -->` 〜 `<!-- COPY TO HERE -->` の間がコピーする範囲。
 その外側はデモと設計メモ。
@@ -153,7 +154,25 @@ fetch('http://localhost:4322/snippets/js/audit.js')
 文章の質、情報の順序は人間が見るしかない。
 `warn` は判断が要る項目（14pxの注記など、文脈によっては妥当）。
 
-現在の実測：`index.html` / `themes.html` / `html/*.html` すべて **error 0**。
+現在の実測：`index.html` / `themes.html` / `html/*.html` /
+`sections-extra.html` すべて **error 0**。
+
+> 🔴 **検証環境の限界（[../LESSONS.md](../LESSONS.md) L-015）**
+> 開発に使っているブラウザペインでは、以下が**一切発火しない**：
+> `IntersectionObserver` / `requestAnimationFrame` / `scroll` / `resize`。
+> レイアウトと計算値は正常。
+>
+> したがって**スクロール連動の挙動は、この環境では検証できない。**
+
+| 項目 | 検証状況 |
+|---|---|
+| コントラスト・寸法・DOM構造・320px折り返し | ✅ 検証済み |
+| フォーム検証・全角正規化・FAQ開閉・言語切替 | ✅ 検証済み |
+| `scroll-reveal.js` の **IntersectionObserver 経路** | ⚠️ **未検証**（動いていたのは3秒フォールバック） |
+| 追従CTAの出し分け | ⚠️ **ロジックは手動呼び出しで確認。イベント経路は未検証** |
+| ホバー・フォーカスの遷移、アニメーションの見え方 | ⚠️ 未検証 |
+
+**実ブラウザで一度は自分で触って確認すること。**
 
 > このツール自身にも当初 5件の誤検出があった（[../LESSONS.md](../LESSONS.md) L-010）。
 > **検査ツールを信じすぎない。** 誤検出を放置すると本物の警告まで無視するようになる。
@@ -195,9 +214,9 @@ fetch('http://localhost:4322/snippets/js/audit.js')
 
 ## これから足すもの
 
-- [ ] Bento グリッド（`layout-patterns.md` 3-B）
-- [ ] 料金の比較表（横スクロール版・5-B）
-- [ ] モバイル追従CTA（`responsive.md`）
-- [ ] ロゴウォール
+- [x] ~~Bento グリッド~~ → `html/sections-extra.html`
+- [x] ~~料金の比較表（横スクロール版）~~ → 同上
+- [x] ~~モバイル追従CTA~~ → 同上
+- [x] ~~ロゴウォール~~ → 同上
 - [ ] SVG 図解のテンプレート
 - [ ] `2-web-app` / `3-mobile` 用（着手時に決める）
