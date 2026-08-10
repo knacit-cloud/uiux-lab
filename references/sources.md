@@ -50,9 +50,9 @@
 | 18 | SmartHR Design System | https://smarthr.design/ | 日本語BtoB SaaS の実例 |
 | 19 | Ameba Spindle | https://spindle.ameba.design/ | 日本語デザインシステムの実例 |
 | 20 | デジタル庁「ダッシュボードデザインの実践ガイドブック」 | https://digital-agency-news.digital.go.jp/articles/2026-04-22-2 | `2-web-app/` 着手時。日本語のダッシュボード指針は貴重 |
-| 21 | Shopify Polaris | https://polaris.shopify.com/ | `2-web-app/` 管理画面の実例 |
-| 22 | Atlassian Design System | https://atlassian.design/ | `2-web-app/` 管理画面の実例 |
-| 23 | IBM Carbon Design System | https://carbondesignsystem.com/ | `2-web-app/` データ密度の高い画面 |
+| 21 | ~~Shopify Polaris~~ | ~~https://polaris.shopify.com/~~ | **2026-08-08 廃止。`shopify.dev` にリダイレクトされ、実測できるコンポーネント集がない**（下記 A6） |
+| 22 | Atlassian Design System | https://atlassian.design/ | `2-web-app/` 管理画面の実例 → **2026-08-08 実測済み（A2）** |
+| 23 | IBM Carbon Design System | https://carbondesignsystem.com/ | `2-web-app/` データ密度の高い画面 → **2026-08-08 実測済み（A3）** |
 | 24 | **消費者庁 — ダークパターン実態調査**（2025-04-07） | https://www.caa.go.jp/policies/future/icprc/research_010 | `0-core/ethics.md`。**二次情報でのみ確認。原典PDF未照合** — 102サイト調査／4類型／景表法・特商法への抵触の恐れ |
 | 25 | **消費者庁 — 最終確認画面の表示方法**（特商法2022年6月施行） | https://www.caa.go.jp/policies/policy/consumer_transaction/amendment/2021/notice02/index.html | `0-core/ethics.md`。**概要のみ確認**。分量・総額・回数の同一画面表示義務 |
 | 26 | **消費者庁 — 景品表示法とステルスマーケティング**（2023-10-01施行） | https://www.caa.go.jp/policies/policy/representation/fair_labeling | `0-core/ethics.md`。**概要のみ確認**。広告であることを隠した表示は不当表示 |
@@ -68,6 +68,10 @@
 - [ ] #8 デジタル庁 Spacing — 「8pxが基準単位」の記述の位置づけ（推奨か、規定か）
 - [ ] #9 web.dev Web Vitals — INP が FID を置き換えた後の最新閾値であることの確認
 - [ ] #1 Vercel WIG — リポジトリの更新頻度が高い。定期的に取り直す
+- [ ] **2026-08-08 の実測（`references/metrics/2026-08-08-app-triage.md`）を人間が再現する。**
+      特に **Carbon のセル行間 1.29**（`AGENTS.md` の 1.5 基準を割る値）は、
+      資料の基準を書き分ける根拠にする予定なので、人間の目で確かめてから使う
+- [ ] **Material Design 3 は未検証のまま候補表に載っている。** 実際に開いて判定する
 
 ---
 
@@ -145,3 +149,27 @@
 
 **教訓：スキルは「データ量」ではなく「主張の質」で選ぶ。**
 752行のCSVより、`frontend-design` の1ファイルの方が資料を変えた。
+
+---
+
+## `2-web-app` 実測の対象（2026-08-08）
+
+**AI が実際に開いて計算値を読んだもの。⚠️（人間未確認）。**
+数値と判定は `references/metrics/2026-08-08-app-triage.md`。
+
+| # | 対象 | URL | 使っている箇所 | 状態 |
+|---|---|---|---|---|
+| A1 | Grafana Play（実アプリ） | https://play.grafana.org | `2-web-app/SCOPE.md`（アプリは window がスクロールしない・本文14px） | ⚠️ |
+| A2 | Atlassian Design System — Dynamic table | https://atlassian.design/components/dynamic-table/examples | `2-web-app/SCOPE.md`（行高48px・セル行間1.43） | ⚠️ |
+| A3 | IBM Carbon — DataTable（Storybook） | https://react.carbondesignsystem.com/iframe.html?id=components-datatable-basic--default | `2-web-app/SCOPE.md`（行高48px・**セル行間1.29**・角丸0） | ⚠️ |
+| A4 | SmartHR Design System — Table | https://smarthr.design/products/components/table/ | `2-web-app/SCOPE.md`（セル16px・行高41px。**日本語**） | ⚠️ |
+| A5 | デジタル庁デザインシステム（トップ） | https://design.digital.go.jp/dads/ | 宿題#1の材料（自サイトの本文17px・行間1.7） | ⚠️ |
+| A6 | Shopify Polaris references | https://shopify.dev/docs/api/polaris | **不採用の根拠**（旧 polaris.shopify.com からのリダイレクト先） | ⚠️ |
+
+**注意事項**
+
+- A4 の実測は Chromatic の Storybook iframe 内で行った。
+  **URL にビルドハッシュが含まれ、いずれ切れる。** 上の安定URLからページ内 iframe を辿ること
+- A1 は**ダークテーマ**での測定。色数の値をライトテーマの実例と直接比較しない
+- A3 は `globals=theme:white` を明示して測定
+- **すべてサンプルデータが入った理想状態。** 実データ・権限分岐・大量行の状態は測れていない
