@@ -1,3 +1,25 @@
+const js = require('@eslint/js');
+const globals = require('globals');
+
+module.exports = [
+  {
+    ignores: [
+      'node_modules/**',
+      '**/node_modules/**',
+      'dist/**',
+      'build/**',
+      '**/*.d.ts',
+    ],
+  },
+  js.configs.recommended,
+  {
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+];
 // uiux-lab の静的プレビューサーバー
 //   node .claude/server.js  →  http://localhost:4322/snippets/
 const http = require('http');
