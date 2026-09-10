@@ -36,7 +36,7 @@
     if (!css) return null;
     var m = css.match(/rgba?\(([^)]+)\)/);
     if (!m) return null;
-    var p = m[1].split(/[\s,\/]+/).filter(Boolean).map(parseFloat);
+    var p = m[1].split(/[\s,/]+/).filter(Boolean).map(parseFloat);
     if (p.length < 3 || p.some(isNaN)) return null;
     return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
   }
@@ -321,7 +321,7 @@
   rule('forms', 'フォーム部品', function (add) {
     var fields = document.querySelectorAll(
       'input:not([type=hidden]):not([type=submit]):not([type=button]),select,textarea');
-    var noLabel = [], noAuto = [], smallFont = [], blockedPaste = [];
+    var noLabel = [], noAuto = [], smallFont = [];
 
     for (var i = 0; i < fields.length; i++) {
       var f = fields[i];
@@ -521,7 +521,7 @@
         for (var r = 0; r < rules.length; r++) {
           if (rules[r].conditionText && /prefers-reduced-motion/.test(rules[r].conditionText)) found = true;
         }
-      } catch (e) { unreadable++; }
+      } catch { unreadable++; }
     }
     var animated = document.querySelectorAll('[class*=anim],[data-reveal]').length;
     if (!found && !unreadable && animated) {
@@ -543,14 +543,14 @@
       var el = els[i];
       var before = getComputedStyle(el);
       var b = { o: before.outlineWidth, s: before.boxShadow, bc: before.borderColor, bg: before.backgroundColor };
-      try { el.focus({ preventScroll: true }); } catch (e) { continue; }
+      try { el.focus({ preventScroll: true }); } catch { continue; }
       var after = getComputedStyle(el);
       var changed = after.outlineWidth !== b.o || after.boxShadow !== b.s ||
                     after.borderColor !== b.bc || after.backgroundColor !== b.bg;
       // outline がそもそも 0 で、他も変わらない = 見えない
       if (!changed && parseFloat(after.outlineWidth) === 0) bad.push(selectorOf(el));
     }
-    if (active && active.focus) { try { active.focus({ preventScroll: true }); } catch (e) {} }
+    if (active && active.focus) { try { active.focus({ preventScroll: true }); } catch { } }
     window.scrollTo(scrollX, scrollY);
 
     if (bad.length) {
