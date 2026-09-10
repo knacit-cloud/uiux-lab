@@ -1,0 +1,29 @@
+{
+  "name": "uiux-lab",
+  "version": "1.0.0",
+  "description": "Web デザインと UI/UX の参考資料。**次に何かを作るときの土台**として使う。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/knacit-cloud/uiux-lab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/knacit-cloud/uiux-lab/issues"
+  },
+  "homepage": "https://github.com/knacit-cloud/uiux-lab#readme",
+  "devDependencies": {
+    "@eslint/css": "^2.0.0",
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^2.1.0",
+    "@eslint/markdown": "^8.0.3",
+    "eslint": "^10.10.0",
+    "globals": "^17.12.0"
+  }
+}
