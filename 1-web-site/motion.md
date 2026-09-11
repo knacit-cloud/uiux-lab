@@ -208,6 +208,36 @@ details[open] .content { grid-template-rows: 1fr; }
 details .content > div { overflow: hidden; }
 ```
 
+### 5. ビュートランジション（同一文書内） △条件つき
+
+⚠️ 出典：[MDN — View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
+（Chrome/Safari 対応、**Firefox 未対応**。2026-09確認・要再確認、`tech-stack.md` 段階B）
+
+`<html>` の言語切替、FAQ の内容差し替えなど、**同じページ内でDOMが差し替わる瞬間**を
+滑らかにつなげる。判断基準は他の動きと同じ：**「この動きを消したら、何か失うか」。**
+
+```js
+function swapContent(next) {
+  if (!document.startViewTransition) { renderContent(next); return; } // Firefox はここ
+  document.startViewTransition(() => renderContent(next));
+}
+```
+
+```css
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 250ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) { animation: none !important; }
+}
+```
+
+**ルール：**
+- **`view-transition-name` は1〜2個まで。** ページ全体に配りだすと管理不能になる
+- 遷移時間は既定値の 250ms に合わせる（本ファイル冒頭の表）
+- **`prefers-reduced-motion` を必ず止める。** ビュートランジションもアニメーションの一種
+- **Firefox では `document.startViewTransition` が存在しない。** `if` で分岐し、
+  存在しない環境では即座に差し替える（段階Bなので「上乗せ」方向、`css-architecture.md §6`）
+
 ---
 
 ## LPで使わない動き
@@ -227,6 +257,27 @@ details .content > div { overflow: hidden; }
 
 ---
 
+## スクロール駆動アニメーション — 今は使わない
+
+`animation-timeline: scroll()` / `view()` で、`IntersectionObserver` なしにCSSだけで
+「スクロールに連動して動く」を書けるAPIがある。**現時点ではこのリポジトリでは採用しない。**
+
+⚠️ 出典：[MDN — animation-timeline](https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timeline)
+は「Limited availability。主要ブラウザの一部が未対応のため Baseline ではない」と明記
+（2026-09確認。`tech-stack.md` 段階C）。
+
+理由：
+- **主要ブラウザが揃っていない。** フォールバックなしでは使えない状態
+- **本ファイル §2「スクロール連動の出現」の `IntersectionObserver` 版で必要十分。** 移動距離16px・
+  一度出したら戻さない、というこのリポジトリのルールをすでに満たしている
+- **この検証環境では検証できない。** `IntersectionObserver` / `scroll` イベントがこの環境で
+  一切発火しないため（[`snippets/README.md`](../snippets/README.md) L-015）、
+  スクロール駆動の実装を書いても動作確認が人間依存になる
+
+半年後（`tech-stack.md` §5）に対応状況を取り直し、揃っていれば再検討する。
+
+---
+
 ## パフォーマンスへの影響
 
 - スクロールイベントで毎フレーム計算しない → **`IntersectionObserver`**
@@ -234,6 +285,7 @@ details .content > div { overflow: hidden; }
   必要なら開始直前に付けて、終了後に外す
 - `animate-spin` などの無限アニメーションは、画面外では止める
 - 重い動きは INP（200ms以内）を悪化させる（`performance.md`）
+- **CSSだけで済む動きはCSSで書く。** メインスレッドの空きが増え、INPに効く
 
 ---
 

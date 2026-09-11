@@ -35,6 +35,39 @@
 
 ---
 
+## モダンCSS/プラットフォーム機能（2026-09-11 追加、本文照合済 ⚠️）
+
+`1-web-site/tech-stack.md` の段階表・`css-architecture.md`・既存ファイルへの追記で使用。
+すべて MDN（[developer.mozilla.org](https://developer.mozilla.org/)）の Baseline 表示、
+または caniuse.com の互換性データを **2026-09 に WebFetch で取得**。人間未確認のため `⚠️`。
+
+| 機能 | URL | Baseline / 対応状況 |
+|---|---|---|
+| `:has()` | https://developer.mozilla.org/en-US/docs/Web/CSS/:has | widely available（2023-12〜） |
+| `@layer` | https://developer.mozilla.org/en-US/docs/Web/CSS/@layer | widely available（2022-03〜） |
+| `:is()` / `:where()` | https://developer.mozilla.org/en-US/docs/Web/CSS/:is | widely available（2021-01〜） |
+| `@supports` | https://developer.mozilla.org/en-US/docs/Web/CSS/@supports | widely available（2015-09〜） |
+| Subgrid | https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Subgrid | widely available（2023-09〜） |
+| `oklch()` | https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch | widely available（2023-05〜） |
+| `color-mix()` | https://developer.mozilla.org/en-US/docs/Web/CSS/color-mix | widely available（2023-05〜） |
+| `light-dark()` | https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark | newly available（2024-05〜） |
+| `inert` | https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/inert | widely available（2023-04〜） |
+| `<dialog>` | https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog | widely available（2022-03〜） |
+| Popover API | https://developer.mozilla.org/en-US/docs/Web/API/Popover_API | Baseline 2025 newly available |
+| `:user-invalid` | https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid | widely available（2023-11〜） |
+| `field-sizing` | https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing | newly available（**2026-06〜**、取得時点で3ヶ月） |
+| `@property` | https://developer.mozilla.org/en-US/docs/Web/CSS/@property | newly available（2024-07〜） |
+| `animation-timeline`（scroll-driven） | https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timeline | **Limited availability。MDNが明記**（Baselineでない根拠） |
+| svh/dvh/lvh | https://caniuse.com/viewport-unit-variants | Chrome 108・Firefox 101・Safari 15.4 以降 |
+| Anchor Positioning | https://caniuse.com/css-anchor-positioning | Chrome 151+/Safari 27+ 完全対応、**Firefoxは147〜158で部分対応止まり** |
+
+### この回で確定できなかったもの（🔍・要再照合）
+
+- CSS ネスト（`&`）の Baseline 到達日 — https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Nesting
+- コンテナクエリ（`@container`）の Baseline 到達日 — https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries
+- `<details name>` 属性の Baseline 到達日（`<details>` 自体は widely available だが `name` 属性は別）— https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details
+- View Transition API の同一文書内トランジションにおける Firefox の正確な対応状況 — https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API
+
 ## 未照合（🔍）— 引用する前に本文を確認すること
 
 | # | 資料 | URL | 何のために |
@@ -72,6 +105,9 @@
       特に **Carbon のセル行間 1.29**（`AGENTS.md` の 1.5 基準を割る値）は、
       資料の基準を書き分ける根拠にする予定なので、人間の目で確かめてから使う
 - [ ] **Material Design 3 は未検証のまま候補表に載っている。** 実際に開いて判定する
+- [ ] CSS ネスト・コンテナクエリ・`<details name>` の Baseline 到達日（上記「この回で確定できなかったもの」）
+- [ ] View Transition API の Firefox 対応状況（同一文書内）— `motion.md` §5 の分岐が正しい前提か
+- [ ] **`tech-stack.md` の段階表そのもの。** 取得日は2026-09。半年後（目安2027-03）に取り直す（`tech-stack.md` §5）
 
 ---
 
@@ -122,6 +158,14 @@
   日本語の書き方の慣行。**表記ルールはプロジェクトごとに決めるもので、絶対の正解はない**
 - `launch-checklist.md` — 項目の大半は他ファイルの再掲（根拠はそちら）。
   法務項目（プライバシーポリシー・特商法）は**一般論であり、法的助言ではない**
+
+### 2026-09-11 追加分（tech-stack.md / css-architecture.md）
+
+- `tech-stack.md` §2 の**段階表の区分（A/B/C）と各機能の割り当て**そのもの。
+  Baselineの到達日はMDN/caniuseが出典だが、**「LPでA/B/Cのどれにするか」はこの資料の判断**であり、実務慣行
+- `visual-design.md` §0 に追加した**4つ目の「AIっぽさ」の型（新機能の見本市）**。
+  1〜3番は Anthropic `frontend-design` skill（出典#12）が根拠だが、**4番目はこの資料の観察であり、外部の一次資料はない**
+- `css-architecture.md` の各機能の**LPでの使いどころの絞り方**（`:has()`を3用途に限定する等）。構文はMDN由来、用途の絞り込みは慣行
 
 ### 意図的に採用しなかった情報源
 

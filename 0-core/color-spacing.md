@@ -34,6 +34,22 @@
 | 600–700 | **主要アクションの背景、本文リンク** |
 | 800–900 | 見出し、本文の文字色 |
 
+**段階を `oklch()` で刻むと、明度が知覚的に揃う。** hex や `hsl()` は同じ明度の数値でも
+色相によって見え方の明るさがバラつく。`oklch(L C H)` の `L`（0〜1）は**知覚明度**なので、
+同じ `L` 差なら見た目の明るさの差も揃う。
+
+⚠️ 出典：[MDN — oklch()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch)
+（widely available・2023-05〜、2026-09確認。段階の判断は [1-web-site/tech-stack.md](../1-web-site/tech-stack.md)）
+
+```css
+--color-primary-600: oklch(58% 0.09 25);  /* 段階600 */
+--color-primary-800: oklch(38% 0.09 25);  /* Lだけ下げる。色相・彩度は保つ */
+```
+
+**ただし `L` を揃えても、WCAGのコントラスト比（相対輝度ベース）は保証されない。**
+`oklch()` は「見た目の明るさが揃う」であって「コントラスト比が合格する」ではない。
+必ず実測する（[LESSONS L-009](../LESSONS.md)と同じ教訓）。
+
 **本文の文字色に純黒 `#000` を使わない。** 白背景とのコントラストが強すぎて目が疲れる。
 `#1a1a1a`〜`#2e2a26` あたりの、わずかに色味を含んだ濃色を使う。
 同様に背景の純白 `#fff` も、少し灰か暖色に寄せると紙に近くなる。
@@ -60,6 +76,19 @@ hex を HTML/JSX に直書きしない。**必ず変数経由。**
 意味トークンを挟むと、**ダークモードとブランド変更が変数の差し替えだけで済む。**
 `--color-primary-600` を直接使い回すと、後から全箇所を直すことになる。
 
+**派生色（ホバー・淡い背景など）を毎段階トークン化しない**でよい場面には `color-mix()` が使える。
+
+⚠️ 出典：[MDN — color-mix()](https://developer.mozilla.org/en-US/docs/Web/CSS/color-mix)
+（widely available・2023-05〜、2026-09確認）
+
+```css
+--action-primary-hover: color-mix(in oklch, var(--action-primary) 90%, black);
+--bg-tint:              color-mix(in oklch, var(--action-primary) 8%, white);
+```
+
+**本流はトークンを用意すること。** `color-mix()` は「トークンを増やすほどでもない一時的な派生」向け。
+UIの主要な役割（背景・文字・境界線）は、これまで通り意味トークンとして明示的に持つ。
+
 ### コントラストは設計時に確認する
 
 - 通常テキスト **4.5:1**、大きい文字・UI部品 **3:1**（詳細は `accessibility.md`）
@@ -79,6 +108,23 @@ hex を HTML/JSX に直書きしない。**必ず変数経由。**
 ```css
 :root { color-scheme: light dark; }
 ```
+
+**ライト／ダークの値を1つのトークン定義にまとめるなら `light-dark()`。**
+
+⚠️ 出典：[MDN — light-dark()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark)
+（newly available・2024-05〜、2026-09確認。新しめなので上乗せ方向で使う、[tech-stack.md 段階B](../1-web-site/tech-stack.md)）
+
+```css
+:root {
+  color-scheme: light dark;
+  --bg-surface: light-dark(#ffffff, #1a1715);
+  --text-primary: light-dark(#2e2a26, #e8e3dc);
+}
+```
+
+`color-scheme` の指定と対になる（`light-dark()` は `color-scheme` の値を見て切り替える）。
+`@media (prefers-color-scheme: dark) { :root { ... } }` で別ブロックにダーク値を書く方式と比べ、
+**同じ行にライト・ダークが並ぶので差分が追いやすい。** どちらの書き方でも動作は同じで、これは好みの問題。
 
 ---
 

@@ -106,6 +106,12 @@
 - [ ] `<html>` に `color-scheme`
 - [ ] `<meta name="theme-color">` が背景色と一致
 - [ ] ネイティブ `<select>` に `background-color` と `color` を明示
+- [ ] ダーク値を `light-dark()` でまとめるなら `color-scheme` の指定とセット（`color-spacing.md`）
+
+## 新しいCSS/JS機能を使うとき
+
+- [ ] Baseline未達の機能をフォールバックなしで使っていない（採否は `1-web-site/tech-stack.md` の段階表）
+- [ ] 段階B機能は `@supports` の**上乗せ方向**にのみ書いている（打ち消し方向にしない、`css-architecture.md`）
 
 ## 国際化
 
@@ -140,3 +146,4 @@
 - 理由のない `autoFocus`
 - **14px 未満の本文**（追記）
 - **日本語本文の `line-height` が 1.5 未満**（追記）
+- **モバイルで `height: 100vh`**（`100svh` にする。`1-web-site/responsive.md`）

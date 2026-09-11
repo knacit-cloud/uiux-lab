@@ -81,6 +81,8 @@ node .claude/server.js
 | 見た目 | `visual-design.md` | 「安っぽさ」の10症状と対処、階層、写真、影、色の面積 |
 | 見た目 | `responsive.md` | ブレークポイント、組み替え、タッチ寸法、セーフエリア |
 | 見た目 | `motion.md` | 動きの既定値、使っていい動き／使わない動き、実装 |
+| 実装 | `tech-stack.md` | **新しいCSS/JS機能を使うかどうかの段階表**（A使ってよい/B上乗せのみ/C まだ使わない） |
+| 実装 | `css-architecture.md` | CSSの書き方。`@layer` / `:has()` / `:where()` / ネストで詳細度事故を防ぐ |
 | 実装 | `forms.md` | 項目削減、type/inputmode、バリデーション時機、完了画面 |
 | 実装 | `performance.md` | Core Web Vitals、CLS対策、日本語フォントの重さ |
 | 実装 | `i18n.md` | 日英バイリンガル。別URL vs 切替式、崩れ方、訳の作法 |

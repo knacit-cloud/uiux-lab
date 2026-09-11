@@ -51,6 +51,54 @@ DevTools → デバイスツールバー → Responsive → 320 × 568
 
 ---
 
+## ビューポートで足りないとき — コンテナで測る
+
+**原則は変わらない。** LP は `md` と `lg` の2つで足りる（上記）。
+コンテナクエリを使うのは、**同じ型を複数のスロット幅で使い回すとき**だけ。
+
+⚠️ 出典：[MDN — CSS Container Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries)
+（主要ブラウザ対応済み。到達日は🔍未確認、`references/sources.md` 人間確認キュー参照）
+段階の判定は [`tech-stack.md` §2](tech-stack.md) を参照（段階A・使ってよい）。
+
+**使いどころの例：** [`layout-patterns.md` 3-C 均等3カラム](layout-patterns.md) のカードを、
+本文中では1カラム幅、サイドバーでは全幅、というように**ビューポート幅ではなく置かれた場所の幅**で
+文字サイズや余白を変えたいとき。ビューポート幅だけで足りるなら、通常の `md:` `lg:` で書く。
+
+```css
+.card-slot { container-type: inline-size; }
+
+@container (min-width: 480px) {
+  .card { display: grid; grid-template-columns: auto 1fr; }
+}
+```
+
+**`container-type: inline-size` を付けた要素は、自分自身に `@container` を効かせられない。**
+親に付けて子で判定する。
+
+### `100vh` が信用できない問題
+
+モバイルブラウザはアドレスバーの表示／非表示でビューポート高さが変わるため、
+`height: 100vh` は**実際の表示領域より大きくなる**（下がアドレスバーに隠れる）。
+
+⚠️ 出典：[caniuse — Viewport unit variants](https://caniuse.com/viewport-unit-variants)
+（Chrome 108・Firefox 101・Safari 15.4 以降で対応、2026-09確認）
+
+```css
+/* ✕ アドレスバーの分だけ余分に高くなる */
+.hero { min-height: 100vh; }
+
+/* ○ 実際に見えている領域に合わせる */
+.hero { min-height: 100svh; }
+```
+
+- **`svh`**（small viewport height）：アドレスバーが**出ている**状態を基準。安全な最小値
+- **`lvh`**（large viewport height）：アドレスバーが**隠れた**状態を基準。最大値
+- **`dvh`**（dynamic viewport height）：スクロールに応じて動的に追従。ただし追従中にレイアウトが動くので、**固定要素の高さ指定には `svh` を使う方が安定する**
+
+[`structure.md`](structure.md) の false floor 対策（`100vh` ヒーローを避ける）と合わせて使う。
+
+---
+
 ## セクション別の組み替え
 
 ### ヒーロー
@@ -171,6 +219,41 @@ document.addEventListener('keydown', (e) => {
 
 **必須：** `aria-expanded` / `aria-controls` / `aria-label` の更新、Escで閉じる、
 閉じたらトグルにフォーカスを戻す。
+
+### popover / `<dialog>` / `inert` という選択肢
+
+上のハンバーガー実装は、**このリポジトリの既定として残す。** 動作が完全に手で制御できる。
+ただし `popover` 属性や `<dialog>` を使うと、いくつかの挙動がブラウザ標準で付いてくる。
+
+⚠️ 出典：[MDN — Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API)
+（Baseline 2025 newly available）、[MDN — inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/inert)
+（widely available・2023-04〜）、[MDN — dialog要素](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog)
+（widely available・2022-03〜）。いずれも2026-09確認、段階A（[`tech-stack.md`](tech-stack.md)）。
+
+```html
+<button popovertarget="mobileNav" aria-expanded="false">メニューを開く</button>
+<nav id="mobileNav" popover class="…">…</nav>
+```
+
+**`popover` で標準で付くもの：** top-layer 表示（`z-index` 事故が起きない）、
+外側クリックで閉じる（light dismiss）、Esc で閉じる。
+
+**`popover` でも自分でやる必要があるもの：** `aria-expanded` の同期（標準では連動しない）、
+開閉時のフォーカス移動の細かい制御。**JS実装が要らなくなるわけではない。**
+
+**`<dialog>`（`showModal()`）を使う場面：** ナビより、**フォーム内の確認モーダルや同意バー**。
+`inert` を背後の要素に付けると、モーダル表示中に背後がキーボード・スクリーンリーダーの両方から
+到達不能になる（`<dialog>` の `showModal()` は自動でこれをやる。`popover` は自分で `inert` を付ける）。
+
+```html
+<div id="pageContent">…</div>
+<dialog id="confirmModal">
+  <p>本当に送信しますか？</p>
+</dialog>
+```
+
+**どちらを選ぶか：** 既存の `nav-toggle.js`（`snippets/js/`）が動いているなら、無理に置き換えない。
+新規にモバイルナビを組むなら `popover`、確認ダイアログを組むなら `<dialog>` を検討してよい。
 
 ### 固定ヘッダーとアンカーリンク
 

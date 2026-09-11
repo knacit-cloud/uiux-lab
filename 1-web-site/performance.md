@@ -78,7 +78,7 @@ font-family: "Inter", -apple-system, BlinkMacSystemFont,
 - DOM の読み書きをまとめる
 - スクロールイベントは間引く（`requestAnimationFrame` / `IntersectionObserver` を使う）
   → **スクロール連動アニメーションは `IntersectionObserver` で実装する。**
-    `scroll` イベントで毎フレーム計算しない
+    `scroll` イベントで毎フレーム計算しない（`animation-timeline` によるCSSだけの実装は現時点で不採用。理由は [`motion.md`](motion.md)）
 
 ---
 
@@ -95,6 +95,9 @@ Tailwind CDN（`<script src="https://cdn.tailwindcss.com">`）は
 CDN のまま本番運用する場合、少なくとも：
 - ファーストビューに必要な最低限のCSSを `<style>` でインラインに置く
 - `<script>` は `<head>` の最後に置く
+
+**CDN 版では `@layer` が実質使えない**（詳細は [`css-architecture.md` §1](css-architecture.md)）。
+どのCSS/JS機能を使うかの判断は [`tech-stack.md`](tech-stack.md) にまとめてある。
 
 ---
 

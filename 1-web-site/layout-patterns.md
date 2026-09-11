@@ -35,6 +35,9 @@ theme: { extend: { colors: {
 > 装飾用の明るい色をボタン背景や小さい文字に使うと、ほぼ必ず 4.5:1 を割る。
 > 実測例と対処は [ANTI-PATTERNS §4](../ANTI-PATTERNS.md) / [LESSONS L-009](../LESSONS.md)。
 
+Tailwind を使わない場合の素のCSSは [`snippets/css/layout.css`](../snippets/css/layout.css) を参照。
+どのCSS機能をどこまで使うかの判断基準は [`tech-stack.md`](tech-stack.md)、書き方は [`css-architecture.md`](css-architecture.md)。
+
 ---
 
 ## 0. セクションの共通骨格
@@ -308,6 +311,21 @@ BtoBで最も効くセクション。「それ、うちだ」を作れれば以�
 
 **注意点：** 4カラムは狭くなりすぎる。**3が上限**（`lg:grid-cols-3`）。
 
+**カード内の見出し・本文・CTAの行が揃わない**（症状は [visual-design 症状#3「揃っていない」](visual-design.md)）
+とき、カードの高さが不揃いだと `align-items` だけでは直せない。**Subgrid** でカード間の行を共有する。
+
+⚠️ 出典：[MDN — CSS Grid Subgrid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Subgrid)
+（widely available・2023-09〜、2026-09確認。段階A、[`tech-stack.md`](tech-stack.md)）
+
+```css
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: auto; }
+.card  { display: grid; grid-row: span 3; grid-template-rows: subgrid; }
+```
+
+各カードが3行（見出し・本文・CTA）を持つ設計にしておけば、`.card` の `grid-template-rows: subgrid` で
+**親のグリッド行を子が引き継ぎ**、カードをまたいで見出しの下端・CTAの位置が揃う。
+未対応環境向けのフォールバックは不要（対応環境と非対応環境の差は「揃うか、揃わないだけ」）。
+
 ---
 
 ## 4. 流れ・プロセス（Flow）
@@ -487,6 +505,19 @@ BtoBで最も効くセクション。「それ、うちだ」を作れれば以�
 - アイコンは `group-open:rotate-45` で + → × に変える
 - 開閉アニメーションは無理にやらない（`height:auto` は遷移できない）。
   どうしてもなら `grid-template-rows: 0fr → 1fr` を使う
+
+**排他的に開閉させたい**（1つ開いたら他が閉じる、旧来はJS必須だった動き）ときは、
+`<details>` に同じ `name` を振るだけで JS なしにできる。
+
+⚠️ 出典：[MDN — details要素](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details)
+（`name` 属性。🔍 到達日未確認だが3ブラウザとも実装済み、2026-09確認。段階A、[`tech-stack.md`](tech-stack.md)）
+
+```html
+<details name="faq" class="group py-5">…</details>
+<details name="faq" class="group py-5">…</details>
+```
+
+同じ `name` を持つ `<details>` は、1つ開くと他が自動で閉じる。**開閉ロジックのJSが不要になる。**
 
 ---
 

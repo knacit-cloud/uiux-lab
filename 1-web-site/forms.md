@@ -115,6 +115,25 @@ name / email / tel / organization / postal-code / street-address
 | 一度エラーになった欄 | 入力中に再検証して、直ったら即座にエラーを消す |
 | 送信時 | 全体を検証。**最初のエラー欄にフォーカスを移す** |
 
+### CSSだけでできる部分：`:user-invalid`
+
+⚠️ 出典：[MDN — :user-invalid](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid)
+（widely available・2023-11〜、2026-09確認。段階A、[`tech-stack.md`](tech-stack.md)）
+
+**`:invalid` は使わない。** 表示直後・未入力の段階から赤くなり、上の表の「入力中はエラーを出さない」に反する。
+`:user-invalid` は**ユーザーが一度操作した後**にだけマッチする。上表の「フォーカスを外した時」に近い挙動がCSSだけで手に入る。
+
+```css
+input:user-invalid { border-color: var(--border-danger); }
+
+/* フォーム全体の送信ボタンの見た目を変える例（:has()と組み合わせ、css-architecture.md §3） */
+form:has(:user-invalid) button[type="submit"] { opacity: 0.85; }
+```
+
+**メッセージの表示・`aria-describedby` の紐付けは、これでは代替できない。**
+`:user-invalid` は見た目の同期だけ。`form-validate.js`（`snippets/js/`）のメッセージ制御と**二重に効かせない**
+（両方が独立に赤枠をつけると、色は合っても消えるタイミングがズレることがある。境界線の色はCSS側、メッセージの出し分けはJS側、と役割を分ける）。
+
 ### エラーメッセージ
 
 **何が問題か ＋ どう直すか**。両方書く。
@@ -174,3 +193,6 @@ name / email / tel / organization / postal-code / street-address
 - `<form>` で囲み、`<button type="submit">` を使う。**Enter キーで送信できるように**
 - モバイルで入力欄をタップした時に画面が拡大されないよう、**font-size は 16px 以上**
   （iOS Safari は 16px 未満の入力欄で自動ズームする。`user-scalable=no` で殺すのは禁止）
+- `<textarea>` の自動伸長は `field-sizing: content` で書ける（⚠️ [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing)、
+  newly available・2026-06〜と出たばかり。段階B・上乗せのみ、[`tech-stack.md`](tech-stack.md)）。
+  `rows` 属性の指定と `resize` の挙動は残しておき、対応環境だけ上乗せする

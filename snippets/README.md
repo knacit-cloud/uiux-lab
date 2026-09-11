@@ -18,6 +18,12 @@
 > 2. **見て選ぶ** — レイアウト型が実際どう見えるかは、開いた方が早い
 > 3. **コピー元** — 動いている状態からコピーする方が安全
 
+> ⚠️ **ここのコードは `:where()` `:is()` `color-mix()` を既に使っている**
+> （`css/focus-ring.css`、`css/themes/sumi.css`、`html/sections-extra.html`）。
+> どの機能をどこまで使ってよいかの判断基準は [`1-web-site/tech-stack.md`](../1-web-site/tech-stack.md)、
+> 書き方は [`1-web-site/css-architecture.md`](../1-web-site/css-architecture.md) にまとめた
+>（2026-09-11 追加。それまでコードだけが先行し、資料側に説明がなかった）。
+
 ---
 
 ## まず開く
@@ -219,4 +225,7 @@ fetch('http://localhost:4322/snippets/js/audit.js')
 - [x] ~~モバイル追従CTA~~ → 同上
 - [x] ~~ロゴウォール~~ → 同上
 - [ ] SVG 図解のテンプレート
+- [ ] `platform.html` — `CSS.supports()` でブラウザの対応状況を実測表示するページ（`themes.html` と同じ思想）。
+      対応: container query / subgrid / `:has()` / `oklch()`+`color-mix()`+`light-dark()` / `svh` / popover+inert / `<details name>`。
+      scroll-driven・ビュートランジションは検証環境の制約（下記）で人間確認が要る
 - [ ] `2-web-app` / `3-mobile` 用（着手時に決める）

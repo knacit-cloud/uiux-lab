@@ -48,6 +48,8 @@
 | 訪問自体が少ない | 集客。ただし**Googleが否定した施策**に注意 | [seo](1-web-site/seo.md) |
 | 動きが安い | 数が多すぎ・遅すぎ・大きすぎ | [motion](1-web-site/motion.md) |
 | モバイルで崩れた | デスクトップから作った | [responsive](1-web-site/responsive.md) |
+| 特定のブラウザだけ崩れる | Baseline未達の機能をフォールバックなしで使っている | [tech-stack](1-web-site/tech-stack.md) |
+| 詳細度が効かず `!important` が増えていく | 層(`@layer`)を使わずに詳細度でねじ伏せようとしている | [css-architecture](1-web-site/css-architecture.md) |
 
 ---
 
@@ -167,8 +169,11 @@
 | `scroll` イベントで毎フレーム計算 | `IntersectionObserver` を使う |
 | 言語判定をIPアドレスで行う | VPN・旅行者で誤判定。`Accept-Language` かユーザーの選択 |
 | 日時・数値を手で整形 | `Intl.DateTimeFormat` / `Intl.NumberFormat` |
+| **Baseline未達の機能をフォールバックなしで使う** | 一部の環境で機能が丸ごと動かない | [tech-stack](1-web-site/tech-stack.md) |
+| モバイルで `height: 100vh` | アドレスバーの分だけ実際の表示領域より大きくなる | [responsive](1-web-site/responsive.md) |
+| `:invalid` で初期表示から赤くする | 「入力中はエラーを出さない」に反する。`:user-invalid` を使う | [forms](1-web-site/forms.md) |
 
-→ [implementation-checklist](0-core/implementation-checklist.md) / [forms](1-web-site/forms.md)
+→ [implementation-checklist](0-core/implementation-checklist.md) / [forms](1-web-site/forms.md) / [tech-stack](1-web-site/tech-stack.md)
 
 ---
 
@@ -185,6 +190,7 @@
 | タイプライター風の文字送り | 読み終わるまで待たされる |
 | 300ms超の遷移 | 遅く感じる |
 | **JSが失敗するとコンテンツが見えない** | `opacity:0` を `.js` 付きでのみ効かせる |
+| スクロール駆動アニメーション(`animation-timeline`)を未検証のまま入れる | Baselineでない上、この検証環境では動作確認自体ができない(L-015) | [motion](1-web-site/motion.md) |
 
 → [motion](1-web-site/motion.md)
 
