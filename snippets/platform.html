@@ -154,6 +154,13 @@
     }
     .ld-box.force-light { color-scheme: light; }
     .ld-box.force-dark  { color-scheme: dark; }
+    /* 中の <code> は var(--bg-surface-2) 経由で「OS全体」のダーク設定を見ており、
+       .ld-box のローカルな color-scheme 上書きには従わない。
+       文字色（継承）だけがローカルに従うため、force-light 時に暗背景×暗文字で消える事故になる。
+       code の背景も同じ light-dark() のスコープに乗せて揃える。 */
+    .ld-box code {
+      background: light-dark(rgba(46, 42, 38, .08), rgba(255, 255, 255, .12));
+    }
   }
 
   /* ==================================================================

@@ -644,6 +644,52 @@ Storybook のページに **`table` 要素が2つ**あった。
 
 ---
 
+## 2026-09-12
+
+### L-019. `light-dark()` をローカルに上書きしたら、中の `<code>` だけ消えた
+
+**症状**
+
+`snippets/platform.html` の `light-dark()` デモで「ライトに固定」ボタンを押すと、
+枠全体は白背景・黒文字に切り替わったのに、**中の `<code>light-dark()</code>` だけ読めなくなった**
+（暗い背景に暗い文字が重なっていた）。りょうまさんが実ブラウザで見て気づいた。
+
+**原因**
+
+`.ld-box` は `color-scheme: light` をローカルに上書きしていて、
+`background: light-dark(#fff, #1a1715)` と `color: light-dark(...)` はそれに従って白背景・黒文字になる。
+
+一方 `<code>` の背景は `background: var(--bg-surface-2)` で、この変数は
+`0-core/color-spacing.md` の `:root` / `@media (prefers-color-scheme: dark)` で定義されている——
+**OS・ブラウザ全体のダーク設定にしか従わず、`.ld-box` のローカルな `color-scheme` 上書きは見ない。**
+
+文字色（`color`）は継承されるプロパティなので `.ld-box` の上書きに従って黒くなったが、
+`background`（継承されない・`code` 自身が明示的に指定）はOS側の設定のまま暗いグレーだった。
+**「継承されるプロパティ」と「継承されないプロパティ」で、どちらの `color-scheme` に従うかがズレた。**
+
+**対処**
+
+`.ld-box code` の背景も同じ `light-dark()` のスコープに乗せ、親と同じ上書きに従わせた。
+
+```css
+.ld-box code {
+  background: light-dark(rgba(46, 42, 38, .08), rgba(255, 255, 255, .12));
+}
+```
+
+**教訓**
+
+**`light-dark()` を要素単位でローカルに上書きするなら、その中で使う `var(--token)` も全部
+同じスコープに揃っているか確認する。** 揃っていないトークンが1つでも混ざると、
+「継承される色」と「継承されない色」が別々の `color-scheme` を見て、暗背景×暗文字のような
+検出しにくい消失が起きる。`CSS.supports()` では検出できない（構文は合法なので）。
+**AIが書いた時点では気づけなかった。「触って見る」以外に見つける方法がなかった一例。**
+
+→ [`snippets/platform.html`](snippets/platform.html) §oklch/color-mix/light-dark、
+[`0-core/color-spacing.md`](0-core/color-spacing.md)
+
+---
+
 ## 追記のしかた
 
 1. 実際に踏んだら、その場でここに書く（記憶が新しいうちに）
