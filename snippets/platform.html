@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>プラットフォーム機能 実測 — uiux-lab snippets</title>
+<meta name="description" content="1-web-site/tech-stack.md の段階表(A/B/C)を、このブラウザが実際に何を持っているかで検証する。">
+
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/japanese-text.css">
+<link rel="stylesheet" href="css/focus-ring.css">
+<link rel="stylesheet" href="css/reduced-motion.css">
+
+<style>
+  /* --------------------------------------------------------------
+     このページは Tailwind を使わない。tokens.css の意味トークンだけで組む。
+     themes.html と同じ思想：「主張」ではなく「実測」を出す。
+     ここでは色ではなく、CSS.supports() / DOM の実挙動でブラウザの対応状況を測る。
+     -------------------------------------------------------------- */
+  body { background: var(--bg-page); color: var(--text-primary); margin: 0; }
+  .wrap { max-width: 60rem; margin-inline: auto; padding-inline: 1.5rem; }
+
+  header.page {
+    padding-block: var(--space-16) var(--space-8);
+    border-bottom: 1px solid var(--border-default);
+  }
+  .eyebrow {
+    font-size: .8125rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--text-accent); margin: 0 0 .75rem;
+  }
+  h1 { font-size: clamp(1.75rem, 5vw, 2.75rem); line-height: 1.25; margin: 0 0 1rem; }
+  h2 { font-size: clamp(1.25rem, 3vw, 1.625rem); margin: 3.5rem 0 .75rem; }
+  h3 { font-size: 1.0625rem; margin: 0 0 .5rem; }
+  p  { color: var(--text-muted); max-width: 42em; }
+  code { font-family: var(--font-mono); font-size: .875em; background: var(--bg-surface-2);
+         padding: .1em .35em; border-radius: 4px; }
+  a { color: var(--text-link); }
+
+  section.demo { padding-block: var(--space-8); border-bottom: 1px solid var(--border-subtle); }
+  .tier { display: inline-flex; align-items: center; gap: .35em; font-size: .75rem;
+          font-weight: 600; padding: .2em .6em; border-radius: var(--radius-full); }
+  .tier-A { background: #E4EFE6; color: #1B7A3D; }
+  .tier-B { background: #FBF0DD; color: #9A6B24; }
+  .tier-C { background: #F3E3E1; color: #A63A32; }
+  :root[data-theme='dark'] .tier-A, .tier-A { }
+  @media (prefers-color-scheme: dark) {
+    .tier-A { background: #163821; color: #7FCB97; }
+    .tier-B { background: #3A2E14; color: #E0B368; }
+    .tier-C { background: #3A1E1B; color: #E39187; }
+  }
+
+  .demo-box {
+    margin-top: 1rem; padding: 1.25rem; border-radius: var(--radius-md);
+    background: var(--bg-surface-2); border: 1px solid var(--border-default);
+  }
+  .note {
+    margin-top: .75rem; font-size: .875rem; color: var(--text-muted);
+  }
+  .fallback-note { color: var(--c-warning, #9A6B24); }
+
+  /* --- 実測テーブル -------------------------------------------------------- */
+  table.support { width: 100%; border-collapse: collapse; font-size: .875rem; }
+  table.support th, table.support td {
+    text-align: left; padding: .55rem .6rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  table.support th { color: var(--text-muted); font-weight: 500; }
+  .yes { color: #1B7A3D; font-weight: 600; }
+  .no  { color: #B3261E; font-weight: 600; }
+  .unknown { color: var(--text-muted); }
+  @media (prefers-color-scheme: dark) {
+    /* ライト用の #1B7A3D / #B3261E は #1A1715 背景で 3.31:1 しかない（audit.js で実測）。
+       tier-A/C のダーク配色と同じ色に揃える。 */
+    .yes { color: #7FCB97; }
+    .no  { color: #E39187; }
+  }
+  table.support td a {
+    display: inline-flex; align-items: center; min-height: 24px;
+  }
+
+  /* ==================================================================
+     ① コンテナクエリ
+     ================================================================== */
+  .cq-demo { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .cq-slot { border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: .5rem; }
+  .cq-slot.narrow { width: 200px; }
+  .cq-slot.wide   { width: 420px; }
+  .cq-container   { container-type: inline-size; }
+  .cq-card {
+    display: flex; flex-direction: column; gap: .5rem;
+    background: var(--bg-surface); border-radius: var(--radius-sm); padding: .75rem;
+  }
+  /* 装飾のみ（実コンテンツを持たない）なので img ではなく div + aria-hidden にする */
+  .cq-card .ph {
+    width: 100%; height: 60px; border-radius: 4px;
+    background: linear-gradient(135deg, var(--c-primary-300), var(--c-primary-500));
+  }
+  /* 対応環境だけ：コンテナ幅が360px以上なら横並びに変える */
+  @supports (container-type: inline-size) {
+    @container (min-width: 360px) {
+      .cq-card { flex-direction: row; align-items: center; }
+      .cq-card .ph { width: 96px; height: 64px; flex: none; }
+    }
+  }
+
+  /* ==================================================================
+     ② Subgrid
+     ================================================================== */
+  .sg-demo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .sg-card {
+    background: var(--bg-surface); border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm); padding: 1rem;
+  }
+  /* 対応環境だけ：3行（見出し/本文/CTA）をカード間で共有して揃える */
+  @supports (grid-template-rows: subgrid) {
+    .sg-demo.with-subgrid { grid-auto-rows: auto; }
+    .sg-demo.with-subgrid .sg-card {
+      display: grid; grid-row: span 3; grid-template-rows: subgrid; gap: .5rem;
+    }
+  }
+  .sg-card h4 { margin: 0; font-size: 1rem; }
+  .sg-card p  { margin: 0; }
+  .sg-card .cta { align-self: end; }
+
+  /* ==================================================================
+     ③ :has()
+     ================================================================== */
+  .has-cards { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+  .has-card {
+    background: var(--bg-surface); border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm); padding: .75rem; display: grid; gap: .5rem;
+  }
+  .has-card img.ph { height: 56px; border-radius: 4px; background: var(--c-primary-300); }
+  @supports selector(:has(a)) {
+    .has-card:has(img) { grid-template-columns: 56px 1fr; align-items: center; }
+    .has-card:has(img) img.ph { height: 100%; }
+  }
+
+  /* ==================================================================
+     ④ oklch / color-mix / light-dark
+     ================================================================== */
+  .swatch-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .swatch { width: 64px; height: 64px; border-radius: var(--radius-sm);
+            display: flex; align-items: flex-end; padding: .3rem;
+            font-size: .6875rem; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.4); }
+  .ld-box {
+    margin-top: 1rem; padding: 1rem; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+  }
+  @supports (color: light-dark(#fff, #000)) {
+    .ld-box {
+      color-scheme: light dark;
+      background: light-dark(#ffffff, #1a1715);
+      color: light-dark(#2e2a26, #e8e3dc);
+    }
+    .ld-box.force-light { color-scheme: light; }
+    .ld-box.force-dark  { color-scheme: dark; }
+  }
+
+  /* ==================================================================
+     ⑤ svh / dvh / lvh
+     ================================================================== */
+  .vh-table td.px { font-variant-numeric: tabular-nums; text-align: right; }
+
+  /* ==================================================================
+     ⑥ popover / dialog / inert
+     ================================================================== */
+  [popover] {
+    border: 1px solid var(--border-default); border-radius: var(--radius-md);
+    padding: 1rem; background: var(--bg-surface); box-shadow: var(--shadow-md);
+  }
+  dialog {
+    border: 1px solid var(--border-default); border-radius: var(--radius-md);
+    padding: 1.25rem; box-shadow: var(--shadow-lg); max-width: 22rem;
+  }
+  dialog::backdrop { background: rgba(46,42,38,.5); }
+
+  /* ==================================================================
+     ⑦ <details name>
+     ================================================================== */
+  .faq { border-top: 1px solid var(--border-default); }
+  .faq details { border-bottom: 1px solid var(--border-default); padding-block: .75rem; }
+  .faq summary { cursor: pointer; list-style: none; font-weight: 500; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::before { content: '+ '; color: var(--text-accent); }
+  .faq details[open] summary::before { content: '– '; }
+
+  /* ==================================================================
+     ⑧ :user-invalid
+     ================================================================== */
+  .uv-field { display: block; max-width: 20rem; }
+  .uv-field input {
+    width: 100%; min-height: 44px; padding-inline: .75rem; margin-top: .35rem;
+    border: 1px solid var(--border-default); border-radius: var(--radius-sm);
+    font: inherit; font-size: 16px;
+  }
+  @supports selector(:user-invalid) {
+    .uv-field input:user-invalid { border-color: #B3261E; }
+  }
+  .uv-msg { display: none; color: #B3261E; font-size: .8125rem; margin-top: .35rem; }
+  @supports selector(:user-invalid) {
+    .uv-field:has(input:user-invalid) .uv-msg { display: block; }
+  }
+
+  /* ==================================================================
+     ⑨ ビュートランジション
+     ================================================================== */
+  .vt-list { display: grid; gap: .5rem; margin-top: 1rem; }
+  .vt-list.grid { grid-template-columns: repeat(2, 1fr); }
+  .vt-item { background: var(--bg-surface); border: 1px solid var(--border-default);
+             border-radius: var(--radius-sm); padding: .75rem; view-transition-name: none; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; padding-inline: 1.25rem;
+    border-radius: var(--radius-sm); border: 1px solid var(--border-default);
+    background: var(--bg-surface); color: var(--text-primary);
+    font: inherit; font-size: .9375rem; cursor: pointer;
+  }
+  .btn.primary { background: var(--action-primary); color: var(--text-on-accent); border-color: transparent; }
+
+  footer.page { padding-block: var(--space-16); color: var(--text-muted); font-size: .875rem; }
+</style>
+</head>
+<body>
+
+<header class="page">
+  <div class="wrap">
+    <p class="eyebrow">Platform features — 実測</p>
+    <h1>このブラウザは、何を持っているか</h1>
+    <p>
+      <a href="../1-web-site/tech-stack.md">1-web-site/tech-stack.md</a> の段階表(A使ってよい/B上乗せのみ/C まだ使わない)は
+      MDN・caniuse を2026-09に取得した数値。<strong>ここではそれを「主張」ではなく「今このブラウザでの実測」に変える。</strong>
+      <code>CSS.supports()</code> と実際のDOM挙動で判定している。
+    </p>
+    <p class="note">
+      ⚠️ この検証環境（AIがコードを書く環境）は <code>IntersectionObserver</code> / <code>scroll</code> / <code>resize</code> が
+      発火しない（<a href="README.md">snippets/README.md</a> L-015）。このページの判定表と静的な見た目はAIが確認できるが、
+      <strong>スクロール連動・ビュートランジションの実際の動きは人間が実ブラウザで見ること。</strong>
+    </p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="demo">
+    <h2>対応状況の実測</h2>
+    <p>ページを開いた瞬間に、このブラウザで <code>uiuxPlatformCheck()</code> が判定した結果。</p>
+    <table class="support" id="supportTable">
+      <thead>
+        <tr><th>機能</th><th>段階</th><th>判定</th><th>方法</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p class="note">
+      「対応」は <code>CSS.supports()</code> またはDOMの実挙動によるこのブラウザ単体の判定であり、
+      <code>tech-stack.md</code> の Baseline（3ブラウザ揃っているか）とは別。1台のブラウザで対応していても
+      Baseline とは限らない。
+    </p>
+  </section>
+
+  <section class="demo" id="cq">
+    <h3><span class="tier tier-A">段階A</span> コンテナクエリ</h3>
+    <p>
+      同じ <code>.cq-card</code> を、幅の違う2つのコンテナに置く。対応環境では
+      <strong>コンテナ幅が360px以上のときだけ</strong>横並びに変わる（ビューポート幅は無関係）。
+    </p>
+    <div class="demo-box cq-demo">
+      <div class="cq-slot narrow">
+        <p class="note" style="margin-top:0">幅200px</p>
+        <div class="cq-container">
+          <div class="cq-card"><div class="ph" aria-hidden="true"></div><div><strong>見出し</strong><br>狭い枠では縦積みのまま。</div></div>
+        </div>
+      </div>
+      <div class="cq-slot wide">
+        <p class="note" style="margin-top:0">幅420px</p>
+        <div class="cq-container">
+          <div class="cq-card"><div class="ph" aria-hidden="true"></div><div><strong>見出し</strong><br>広い枠では横並びに変わる。</div></div>
+        </div>
+      </div>
+    </div>
+    <p class="note">実体は <a href="../1-web-site/responsive.md">responsive.md「ビューポートで足りないとき」</a>。</p>
+  </section>
+
+  <section class="demo" id="subgrid">
+    <h3><span class="tier tier-A">段階A</span> Subgrid</h3>
+    <p>3枚のカードで本文の長さが違うと、CTAの位置が揃わない。<code>grid-template-rows: subgrid</code> で行を共有すると揃う。</p>
+    <p class="note" style="margin-top:0">Subgridなし（比較用）：</p>
+    <div class="demo-box sg-demo">
+      <div class="sg-card"><h4>相談パック</h4><p>短い説明。</p><div class="cta"><span class="btn">選ぶ</span></div></div>
+      <div class="sg-card"><h4>標準パック</h4><p>もう少し長い説明がここに入る場合の見え方。</p><div class="cta"><span class="btn">選ぶ</span></div></div>
+      <div class="sg-card"><h4>フルサポート</h4><p>さらに長い説明。複数行にわたることもある、という想定のテキスト。</p><div class="cta"><span class="btn">選ぶ</span></div></div>
+    </div>
+    <p class="note">Subgridあり（対応環境ではCTAの下端が揃う）：</p>
+    <div class="demo-box sg-demo with-subgrid">
+      <div class="sg-card"><h4>相談パック</h4><p>短い説明。</p><div class="cta"><span class="btn">選ぶ</span></div></div>
+      <div class="sg-card"><h4>標準パック</h4><p>もう少し長い説明がここに入る場合の見え方。</p><div class="cta"><span class="btn">選ぶ</span></div></div>
+      <div class="sg-card"><h4>フルサポート</h4><p>さらに長い説明。複数行にわたることもある、という想定のテキスト。</p><div class="cta"><span class="btn">選ぶ</span></div></div>
+    </div>
+    <p class="note">実体は <a href="../1-web-site/layout-patterns.md">layout-patterns.md §3-C</a>。</p>
+  </section>
+
+  <section class="demo" id="has">
+    <h3><span class="tier tier-A">段階A</span> <code>:has()</code></h3>
+    <p>画像の有無でカードのレイアウトを分岐させる。JSなし。</p>
+    <div class="demo-box has-cards">
+      <div class="has-card"><img class="ph" alt=""
+             width="56" height="56"
+             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><span>画像あり：横並びになる</span></div>
+      <div class="has-card"><span>画像なし：普通に縦のまま</span></div>
+    </div>
+    <p class="note">実体は <a href="../1-web-site/css-architecture.md">css-architecture.md §3</a>。フォーム連動の例は下の「:user-invalid」参照。</p>
+  </section>
+
+  <section class="demo" id="color">
+    <h3><span class="tier tier-A">段階A</span> / <span class="tier tier-B">段階B</span> <code>oklch()</code> / <code>color-mix()</code> / <code>light-dark()</code></h3>
+    <p>知覚明度で刻んだ段階と、その場で計算した派生色。</p>
+    <div class="swatch-row" id="oklchRow"></div>
+    <p class="note" style="margin-top:1rem">
+      <code>light-dark()</code>：OSのダークモード設定ではなく、ボタンで要素の <code>color-scheme</code> を直接切り替えて実演する。
+    </p>
+    <div class="demo-box" style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
+      <button type="button" class="btn" data-ld="force-light">ライトに固定</button>
+      <button type="button" class="btn" data-ld="force-dark">ダークに固定</button>
+      <button type="button" class="btn" data-ld="">OS設定に従う</button>
+    </div>
+    <div class="ld-box" id="ldBox">この枠の背景と文字色が <code>light-dark()</code> で切り替わる。</div>
+    <p class="note">実体は <a href="../0-core/color-spacing.md">0-core/color-spacing.md</a>。</p>
+  </section>
+
+  <section class="demo" id="vh">
+    <h3><span class="tier tier-A">段階A</span> <code>svh</code> / <code>dvh</code> / <code>lvh</code></h3>
+    <p>現在のビューポートに対する実測px。モバイルではアドレスバーの状態で <code>dvh</code>/<code>lvh</code> が動く。</p>
+    <table class="support vh-table">
+      <thead><tr><th>単位</th><th class="px">px</th><th>備考</th></tr></thead>
+      <tbody id="vhTable"></tbody>
+    </table>
+    <p class="note">実体は <a href="../1-web-site/responsive.md">responsive.md「100vhが信用できない問題」</a>。</p>
+  </section>
+
+  <section class="demo" id="popover">
+    <h3><span class="tier tier-A">段階A（用途は限定）</span> Popover API / <code>&lt;dialog&gt;</code> / <code>inert</code></h3>
+    <p>
+      <button type="button" class="btn" popovertarget="demoPopover">メニューを開く（popover）</button>
+      <button type="button" class="btn" id="openDialog">確認ダイアログを開く（dialog）</button>
+    </p>
+    <div id="demoPopover" popover>
+      <p style="margin:0 0 .5rem">popover：外側クリック・Escで閉じる（標準動作）。<code>aria-expanded</code>はJSで同期が必要。</p>
+      <a href="#has">項目1</a><br><a href="#subgrid">項目2</a>
+    </div>
+    <dialog id="demoDialog">
+      <p>本当に送信しますか？（<code>showModal()</code> は背後を自動で <code>inert</code> にする）</p>
+      <button type="button" class="btn primary" id="closeDialog">閉じる</button>
+    </dialog>
+    <p class="note">実体は <a href="../1-web-site/responsive.md">responsive.md「popover / dialog / inert という選択肢」</a>。</p>
+  </section>
+
+  <section class="demo" id="faq">
+    <h3><span class="tier tier-A">段階A</span> <code>&lt;details name&gt;</code></h3>
+    <p>JSなしの排他アコーディオン。1つ開くと他が自動で閉じる。</p>
+    <div class="demo-box faq">
+      <details name="platformFaq"><summary>1つ目を開くと？</summary><p>2つ目・3つ目が自動で閉じる（対応環境）。</p></details>
+      <details name="platformFaq"><summary>2つ目の質問</summary><p>ここも同じグループ。</p></details>
+      <details name="platformFaq"><summary>3つ目の質問</summary><p>JSは一切使っていない。</p></details>
+    </div>
+    <p class="note">実体は <a href="../1-web-site/layout-patterns.md">layout-patterns.md §7</a>。</p>
+  </section>
+
+  <section class="demo" id="uv">
+    <h3><span class="tier tier-A">段階A</span> <code>:user-invalid</code></h3>
+    <p>入力前は赤くならない。一度触れて空にした（または不正な値の）ときだけ赤くなる。</p>
+    <div class="demo-box">
+      <form novalidate id="uvForm">
+        <label class="uv-field">
+          メールアドレス
+          <input type="email" required placeholder="example@company.co.jp" autocomplete="email">
+          <span class="uv-msg">メールアドレスの形式を確認してください。</span>
+        </label>
+        <button type="submit" class="btn" style="margin-top:.75rem">確認する（デモなので送信はしない）</button>
+      </form>
+    </div>
+    <p class="note">実体は <a href="../1-web-site/forms.md">forms.md「CSSだけでできる部分」</a>。</p>
+  </section>
+
+  <section class="demo" id="vt">
+    <h3><span class="tier tier-B">段階B（条件つき）</span> ビュートランジション（同一文書）</h3>
+    <p>
+      <button type="button" class="btn primary" id="vtToggle">表示を切り替える</button>
+      <span class="note" id="vtStatus" style="margin-left:.5rem"></span>
+    </p>
+    <div class="vt-list" id="vtList">
+      <div class="vt-item">項目 A</div>
+      <div class="vt-item">項目 B</div>
+      <div class="vt-item">項目 C</div>
+      <div class="vt-item">項目 D</div>
+    </div>
+    <p class="note">
+      対応環境（Chrome/Safari系）では切り替え時にクロスフェードする。Firefoxなど非対応環境では即座に切り替わるだけ
+      （<code>document.startViewTransition</code> の有無で分岐、<code>motion.md §5</code>の実装どおり）。
+      <strong>この検証環境ではクロスフェードの見え方自体は確認できない。人間が実ブラウザで見ること。</strong>
+    </p>
+    <p class="note">実体は <a href="../1-web-site/motion.md">motion.md §5</a>。</p>
+  </section>
+
+  <section class="demo" id="notused">
+    <h3><span class="tier tier-C">段階C — 採用していない</span> スクロール駆動アニメーション / Anchor Positioning</h3>
+    <p>
+      上の実測表には出すが、デモは置かない。<code>animation-timeline: scroll()/view()</code> はMDNが
+      「Baselineでない」と明記しており、Anchor Positioningは2026-09時点でFirefoxが部分対応止まり。
+      採用しない理由の詳細は <a href="../1-web-site/tech-stack.md">tech-stack.md §3</a>。
+    </p>
+  </section>
+
+</main>
+
+<footer class="page">
+  <div class="wrap">
+    <p>
+      このページ自体の破損チェックは <code>js/audit.js</code>（下部で自動実行、<code>?audit=panel</code>でパネル表示）。
+      <a href="index.html">← レイアウト型カタログに戻る</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ======================================================================
+     機能検出 — 主張ではなく実測
+     ====================================================================== */
+  function cssSupports(prop, val) {
+    try { return CSS.supports(prop, val); } catch (e) { return false; }
+  }
+  function selectorSupports(sel) {
+    try { return CSS.supports('selector(' + sel + ')'); } catch (e) { return false; }
+  }
+  function supportsNesting() {
+    try {
+      var sheet = new CSSStyleSheet();
+      sheet.replaceSync('.uiux-nest-probe{ & .x{ color: red; } }');
+      return true;
+    } catch (e) { return false; }
+  }
+  function supportsDetailsName() {
+    try {
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;';
+      var a = document.createElement('details'); a.name = 'uiux-probe';
+      var b = document.createElement('details'); b.name = 'uiux-probe';
+      wrap.appendChild(a); wrap.appendChild(b);
+      document.body.appendChild(wrap);
+      a.open = true;
+      b.open = true;
+      var exclusive = (a.open === false);
+      wrap.remove();
+      return exclusive;
+    } catch (e) { return false; }
+  }
+  function has(objPath) {
+    try {
+      var parts = objPath.split('.');
+      var obj = window;
+      for (var i = 0; i < parts.length; i++) {
+        if (obj == null) return false;
+        obj = obj[parts[i]];
+      }
+      return obj !== undefined;
+    } catch (e) { return false; }
+  }
+
+  var FEATURES = [
+    { label: ':has()', tier: 'A', anchor: '#has',
+      test: function () { return selectorSupports(':has(a)'); }, method: 'CSS.supports(selector)' },
+    { label: '@layer', tier: 'A', anchor: null,
+      test: function () { return cssSupports('color', 'red') && (function () {
+        try { var s = new CSSStyleSheet(); s.replaceSync('@layer a{}'); return true; } catch (e) { return false; }
+      })(); }, method: 'CSSStyleSheet.replaceSync' },
+    { label: ':is() / :where()', tier: 'A', anchor: null,
+      test: function () { return selectorSupports(':is(a)') && selectorSupports(':where(a)'); }, method: 'CSS.supports(selector)' },
+    { label: 'CSSネスト（&）', tier: 'A', anchor: null,
+      test: supportsNesting, method: 'CSSStyleSheet + ネスト規則の解析' },
+    { label: 'コンテナクエリ', tier: 'A', anchor: '#cq',
+      test: function () { return cssSupports('container-type', 'inline-size'); }, method: 'CSS.supports(property)' },
+    { label: 'Subgrid', tier: 'A', anchor: '#subgrid',
+      test: function () { return cssSupports('grid-template-rows', 'subgrid'); }, method: 'CSS.supports(property)' },
+    { label: 'oklch()', tier: 'A', anchor: '#color',
+      test: function () { return cssSupports('color', 'oklch(50% 0.1 200)'); }, method: 'CSS.supports(color)' },
+    { label: 'color-mix()', tier: 'A', anchor: '#color',
+      test: function () { return cssSupports('color', 'color-mix(in oklch, red 50%, blue)'); }, method: 'CSS.supports(color)' },
+    { label: 'svh/dvh/lvh', tier: 'A', anchor: '#vh',
+      test: function () { return cssSupports('height', '100svh'); }, method: 'CSS.supports(length)' },
+    { label: '<details name>（排他）', tier: 'A', anchor: '#faq',
+      test: supportsDetailsName, method: '実際に2つ開いて自動で閉じるか動作確認' },
+    { label: 'inert', tier: 'A', anchor: '#popover',
+      test: function () { return has('HTMLElement.prototype.inert') || 'inert' in document.createElement('div'); },
+      method: 'HTMLElement.prototype' },
+    { label: '<dialog> showModal()', tier: 'A', anchor: '#popover',
+      test: function () { return typeof document.createElement('dialog').showModal === 'function'; },
+      method: 'メソッドの存在確認' },
+    { label: 'Popover API', tier: 'A', anchor: '#popover',
+      test: function () { return 'popover' in document.createElement('div'); }, method: '属性IDLの存在確認' },
+    { label: ':user-invalid', tier: 'A', anchor: '#uv',
+      test: function () { return selectorSupports(':user-invalid'); }, method: 'CSS.supports(selector)' },
+    { label: 'light-dark()', tier: 'B', anchor: '#color',
+      test: function () { return cssSupports('color', 'light-dark(#fff, #000)'); }, method: 'CSS.supports(color)' },
+    { label: 'ビュートランジション（同一文書）', tier: 'B', anchor: '#vt',
+      test: function () { return typeof document.startViewTransition === 'function'; }, method: 'メソッドの存在確認' },
+    { label: '@property', tier: 'B', anchor: null,
+      test: function () { return typeof CSS.registerProperty === 'function'; }, method: 'CSS.registerProperty の存在確認' },
+    { label: 'field-sizing', tier: 'B', anchor: null,
+      test: function () { return cssSupports('field-sizing', 'content'); }, method: 'CSS.supports(property)' },
+    { label: 'スクロール駆動アニメーション', tier: 'C', anchor: '#notused',
+      test: function () { return cssSupports('animation-timeline', 'scroll()'); }, method: 'CSS.supports(property) — 不採用の確認用' },
+    { label: 'Anchor Positioning', tier: 'C', anchor: '#notused',
+      test: function () { return cssSupports('anchor-name', '--a'); }, method: 'CSS.supports(property) — 不採用の確認用' }
+  ];
+
+  function escapeHtml(s) {
+    return String(s).replace(/[<>&]/g, function (m) { return { '<': '&lt;', '>': '&gt;', '&': '&amp;' }[m]; });
+  }
+
+  function renderSupportTable() {
+    var tbody = document.querySelector('#supportTable tbody');
+    FEATURES.forEach(function (f) {
+      var ok;
+      try { ok = !!f.test(); } catch (e) { ok = null; }
+      var tr = document.createElement('tr');
+      // f.label は <details name> のように生の山括弧を含むことがあるため、必ずエスケープしてから埋め込む
+      var safeLabel = escapeHtml(f.label);
+      var label = f.anchor ? '<a href="' + f.anchor + '">' + safeLabel + '</a>' : safeLabel;
+      var verdict = ok === null ? '<span class="unknown">不明</span>'
+                  : ok ? '<span class="yes">対応</span>' : '<span class="no">非対応</span>';
+      tr.innerHTML = '<td>' + label + '</td><td><span class="tier tier-' + f.tier + '">' + f.tier + '</span></td>' +
+                     '<td>' + verdict + '</td><td class="note" style="margin:0">' + f.method + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  /* ======================================================================
+     oklch() スウォッチ — 明度だけ動かして色相を保つ
+     ====================================================================== */
+  function renderSwatches() {
+    var row = document.getElementById('oklchRow');
+    if (!row) return;
+    var steps = [
+      { l: 85, label: '85%' }, { l: 70, label: '70%' }, { l: 58, label: '58%（primary-600相当）' },
+      { l: 44, label: '44%' }, { l: 30, label: '30%' }
+    ];
+    steps.forEach(function (s) {
+      var div = document.createElement('div');
+      div.className = 'swatch';
+      div.style.background = 'oklch(' + s.l + '% 0.09 25)';
+      div.textContent = 'L ' + s.label;
+      row.appendChild(div);
+    });
+  }
+
+  /* ======================================================================
+     svh/dvh/lvh 実測
+     ====================================================================== */
+  function renderVhTable() {
+    var tbody = document.getElementById('vhTable');
+    if (!tbody) return;
+    var probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;';
+    document.body.appendChild(probe);
+    var units = [
+      { u: '100vh',  note: '従来単位。モバイルでアドレスバー分だけ大きくなりうる' },
+      { u: '100svh', note: 'small = アドレスバーが出ている状態基準（安全な最小値）' },
+      { u: '100lvh', note: 'large = アドレスバーが隠れた状態基準（最大値）' },
+      { u: '100dvh', note: 'dynamic = 状態に追従' }
+    ];
+    units.forEach(function (row) {
+      probe.style.height = row.u;
+      var px = probe.getBoundingClientRect().height;
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td><code>' + row.u + '</code></td><td class="px">' + Math.round(px) + 'px</td><td class="note" style="margin:0">' + row.note + '</td>';
+      tbody.appendChild(tr);
+    });
+    probe.remove();
+  }
+
+  /* ======================================================================
+     light-dark() トグル — color-scheme を要素に直接指定して切り替える
+     ====================================================================== */
+  var ldBox = document.getElementById('ldBox');
+  document.querySelectorAll('[data-ld]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      ldBox.classList.remove('force-light', 'force-dark');
+      if (btn.dataset.ld) ldBox.classList.add(btn.dataset.ld);
+    });
+  });
+
+  /* ======================================================================
+     :user-invalid デモ用フォーム — デモなので実送信しない
+     ====================================================================== */
+  var uvForm = document.getElementById('uvForm');
+  if (uvForm) uvForm.addEventListener('submit', function (e) { e.preventDefault(); });
+
+  /* ======================================================================
+     dialog
+     ====================================================================== */
+  var dialog = document.getElementById('demoDialog');
+  var openDialog = document.getElementById('openDialog');
+  var closeDialog = document.getElementById('closeDialog');
+  if (dialog && openDialog) {
+    openDialog.addEventListener('click', function () {
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else dialog.setAttribute('open', ''); // 非対応環境の最低限のフォールバック
+    });
+    closeDialog.addEventListener('click', function () { dialog.close ? dialog.close() : dialog.removeAttribute('open'); });
+  }
+
+  /* ======================================================================
+     ビュートランジション・デモ
+     ====================================================================== */
+  var vtToggle = document.getElementById('vtToggle');
+  var vtList = document.getElementById('vtList');
+  var vtStatus = document.getElementById('vtStatus');
+  var vtGrid = false;
+
+  function renderVt() {
+    vtList.classList.toggle('grid', vtGrid);
+    vtList.querySelectorAll('.vt-item').forEach(function (el, i) {
+      el.style.viewTransitionName = 'vt-item-' + i;
+    });
+  }
+  vtStatus.textContent = typeof document.startViewTransition === 'function'
+    ? '対応（startViewTransitionあり）' : '非対応（即時切り替えにフォールバック）';
+
+  vtToggle.addEventListener('click', function () {
+    vtGrid = !vtGrid;
+    if (typeof document.startViewTransition === 'function') {
+      document.startViewTransition(renderVt);
+    } else {
+      renderVt();
+    }
+  });
+
+  /* ======================================================================
+     実行
+     ====================================================================== */
+  renderSupportTable();
+  renderSwatches();
+  renderVhTable();
+  renderVt();
+})();
+</script>
+
+<script src="js/audit.js" defer></script>
+</body>
+</html>

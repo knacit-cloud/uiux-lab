@@ -161,7 +161,7 @@ fetch('http://localhost:4322/snippets/js/audit.js')
 `warn` は判断が要る項目（14pxの注記など、文脈によっては妥当）。
 
 現在の実測：`index.html` / `themes.html` / `html/*.html` /
-`sections-extra.html` すべて **error 0**。
+`sections-extra.html` / `platform.html` すべて **error 0**。
 
 > 🔴 **検証環境の限界（[../LESSONS.md](../LESSONS.md) L-015）**
 > 開発に使っているブラウザペインでは、以下が**一切発火しない**：
@@ -225,7 +225,9 @@ fetch('http://localhost:4322/snippets/js/audit.js')
 - [x] ~~モバイル追従CTA~~ → 同上
 - [x] ~~ロゴウォール~~ → 同上
 - [ ] SVG 図解のテンプレート
-- [ ] `platform.html` — `CSS.supports()` でブラウザの対応状況を実測表示するページ（`themes.html` と同じ思想）。
-      対応: container query / subgrid / `:has()` / `oklch()`+`color-mix()`+`light-dark()` / `svh` / popover+inert / `<details name>`。
-      scroll-driven・ビュートランジションは検証環境の制約（下記）で人間確認が要る
+- [x] ~~`platform.html` — `CSS.supports()` でブラウザの対応状況を実測表示するページ~~ → 実装済み（2026-09-11）。
+      container query / subgrid / `:has()` / `oklch()`+`color-mix()`+`light-dark()` / `svh` / popover+dialog+inert /
+      `<details name>` / `:user-invalid` / ビュートランジションを実際に動く形で収録。Chrome で実ブラウザ確認済み
+      （`error:0 warn:2`）。⚠️ **未検証：** スクロール駆動・ビュートランジションのクロスフェードの見え方自体は
+      この検証環境（`IntersectionObserver`/`scroll`未発火）では確認できない。人間が一度実ブラウザで見ること
 - [ ] `2-web-app` / `3-mobile` 用（着手時に決める）
