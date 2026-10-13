@@ -233,7 +233,7 @@
 | 本文 | MDN | CC-BY-SA の表示あり | ページ内リンク。**版は未確認** | Baseline 到達状況の参照 |
 | 7, 8, A5 | デジタル庁デザインシステム | **文章の利用条件は未確認**（見つかったのはイラスト・アイコン素材の規約のみ。コードは MIT） | design.digital.go.jp | 数値の参照にとどめる |
 | 13 | deceptive.design | © Testimonium Ltd。ライセンス表示なし | フッター | 分類名の参照にとどめる |
-| 2〜4 | NN/g | **All Rights Reserved。翻訳は有料許諾制** | `copyright-and-reprint-info` | **許諾未取得。`principles.md` 等は MIT の対象外（NOTICE C）。書き直し or リンク化を検討中** |
+| 2〜4 | NN/g | **All Rights Reserved。翻訳は有料許諾制、数語〜数行の引用とリンクは可** | `copyright-and-reprint-info` | **許諾未取得。2026-10-13 に原文と見比べ、訳に近い数文を言い換えた。名称・数値の参照＋要約の扱い（NOTICE C）** |
 
-**宿題**：①NN/g 由来の箇所（`principles.md` / `hero-cta.md` / `structure.md`）が翻訳に当たるかの本文照合
+**宿題**：①（済・2026-10-13）NN/g 由来の3ファイルを原文と照合。`principles.md` 数文・`hero-cta.md` 1か所を言い換え。`structure.md` は数値の参照のみで変更なし
 ②デジタル庁・W3C・MDN の条件ページ本文の確認 ③WIG（2026-08-18 / 10-05）と frontend-design（2026-09-03）の更新の取り込み
