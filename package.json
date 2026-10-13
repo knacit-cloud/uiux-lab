@@ -11,8 +11,8 @@
     "url": "git+https://github.com/knacit-cloud/uiux-lab.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Knacit",
+  "license": "MIT",
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/knacit-cloud/uiux-lab/issues"

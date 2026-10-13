@@ -2,6 +2,10 @@
 
 Web デザインと UI/UX の参考資料。**次に何かを作るときの土台**として使う。
 
+公開されている資料を日本語で整理し、AI（Claude Code）の支援で編纂した参考資料集です。
+出典と検証状況は [`references/sources.md`](references/sources.md)、
+第三者資料のライセンスと帰属は [`NOTICE`](NOTICE)、自作部分のライセンスは [`LICENSE`](LICENSE)（MIT）にあります。
+
 人間が読む資料であると同時に、**Claude Code などの AI に読ませる指示書**でもある。
 新しいサイト／アプリを作るとき「`uiux-lab` を参照して作って」と言えば、毎回同じ基準で出せる状態を目指す。
 

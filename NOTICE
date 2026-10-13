@@ -1,0 +1,85 @@
+uiux-lab — Third-party notices / 第三者資料の帰属表示
+
+本リポジトリは、公開されている資料を日本語で整理し、AI（Claude Code）の支援で編纂した
+参考資料集です。自作部分は LICENSE（MIT）に従います。
+以下の第三者資料は、翻訳・要約・改変して含まれており、それぞれの条件に従います。
+出典ごとの検証状況は references/sources.md を参照してください。
+
+ライセンスの確認日: 2026-10-13（原典のリポジトリ／ページを直接確認）
+
+======================================================================
+A. 内容を翻訳・改変して含むもの（ライセンスに基づく表示）
+======================================================================
+
+1. Vercel Web Interface Guidelines
+   URL      : https://github.com/vercel-labs/web-interface-guidelines
+   License  : MIT — Copyright (c) 2025 Vercel Labs
+   全文     : licenses/MIT-vercel-labs-web-interface-guidelines.txt
+   使用箇所 : 0-core/implementation-checklist.md（ほぼ全項目）
+              0-core/typography.md（「その他の作法」）
+   改変     : 日本語訳。項目の取捨選択、日本語向けの追記・差し替えあり
+              （追記箇所は implementation-checklist.md 内に「追記」と明記）
+   参照した版: command.md、2026-07 時点（2026-04-06 のコミット d0a657b 相当）。
+              原典はその後 2026-08-18、2026-10-05 に更新されており、未反映。
+
+2. Anthropic frontend-design skill
+   URL      : https://github.com/anthropics/skills/tree/main/skills/frontend-design
+   License  : Apache License 2.0（skills/frontend-design/LICENSE.txt）
+   全文     : licenses/Apache-2.0-anthropics-frontend-design.txt
+   使用箇所 : 1-web-site/visual-design.md §0
+              1-web-site/process.md ⑤
+              LESSONS.md L-007
+   改変     : 日本語訳・要約・再構成（Apache-2.0 §4(b) による変更の明示）。
+              visual-design.md §0 の4番目の型（新機能の見本市）は本資料の独自の観察で、原典にはない。
+   参照した版: SKILL.md、2026-08-01 時点（2026-06-09 のコミット 2235be7 相当と推定）。
+              原典は 2026-09-03 に更新されており、未反映。
+
+======================================================================
+B. 事実・数値・仕様の出典として参照するもの（本文の転載・翻訳はしない方針）
+======================================================================
+
+3. web.dev / Google Search Central
+   URL      : https://web.dev/articles/vitals ほか（sources.md #9 #10 #11）
+   License  : 文章は CC BY 4.0、コードは Apache 2.0（各ページのフッター表記）
+
+4. W3C WCAG 2.2 Quick Reference ほか
+   URL      : https://www.w3.org/WAI/WCAG22/quickref/（sources.md #5 #6）
+   Copyright: © 2025 W3C（Permission to Use WAI Material）。条件ページ本文は未確認。
+
+5. MDN Web Docs
+   URL      : https://developer.mozilla.org/
+   License  : コンテンツは Creative Commons 表示（CC-BY-SA）。版の細部は未確認。
+              本資料は Baseline の到達状況を数値として参照するのみ。
+
+6. デジタル庁デザインシステム（β版）
+   URL      : https://design.digital.go.jp/dads/（sources.md #7 #8 #A5）
+   License  : ドキュメント文章の利用条件は未確認。
+              （GitHub の design-tokens 等のコードは MIT だが、文章は別）
+              数値（16px 下限・行間150%・基準単位8px 等）の参照にとどめる。
+
+7. Deceptive Design（Harry Brignull）
+   URL      : https://www.deceptive.design/types（sources.md #13）
+   Copyright: © Testimonium Ltd。ライセンス表示は確認できず。
+              分類名の参照にとどめる。
+
+======================================================================
+C. 本ライセンス（MIT）の対象外とするもの（not covered）
+======================================================================
+
+8. Nielsen Norman Group の記事
+   URL      : https://www.nngroup.com/articles/（sources.md #2 #3 #4）
+   Copyright: © Nielsen Norman Group. All Rights Reserved.
+              同社は翻訳に許諾（有料）を求めている
+              （https://www.nngroup.com/articles/copyright-and-reprint-info/）。
+   該当箇所 : 0-core/principles.md（Nielsen の10ヒューリスティクス）
+              1-web-site/hero-cta.md、1-web-site/structure.md の NN/g 由来の記述
+   状態     : 許諾は取得していない。上記箇所は LICENSE の MIT 許諾の対象に含めない。
+              自分の言葉への書き直し、またはリンクのみへの置き換えを検討中。
+              それまで、これらの箇所を再配布・転載しないでください。
+
+======================================================================
+D. 参照のみ・取り込まなかったもの
+======================================================================
+
+- ui-ux-pro-max（nextlevelbuilder, MIT）: 突き合わせに使ったのみ。内容は取り込んでいない。
+- product-design-roadmap（Anastasia Prokhorova）: 抜け漏れの確認にのみ使用。内容・構造は取り込んでいない。

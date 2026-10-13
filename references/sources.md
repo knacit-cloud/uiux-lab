@@ -186,7 +186,7 @@
 | スキル | ライセンス | 判断 |
 |---|---|---|
 | **`frontend-design`**（anthropics/skills） | **Apache-2.0** | **採用。** 出典 #12。AI生成デザインの3デフォルト、Signature の概念、計画→批評の2段階、CSS詳細度の警告。**この資料で最も価値のあった外部入力** |
-| `web-design-guidelines`（vercel-labs） | 未記載 | **採用済み**（出典 #1）。`implementation-checklist.md` の土台 |
+| `web-design-guidelines`（vercel-labs） | MIT（agent-skills の README に記載。スキル単体の LICENSE は無い。2026-10-13 訂正） | **採用済み**（出典 #1）。`implementation-checklist.md` の土台 |
 | `ui-ux-pro-max`（nextlevelbuilder） | **MIT** | **限定採用。** CSV 752行のデータ集。①`ux-guidelines.csv`（99行のDo/Don't）は突き合わせ用に有用 ②ただし `ui-reasoning.csv` は「Glassmorphism + Flat Design」「Trust blue」といった**流行スタイルの推薦**で、`frontend-design` が警告する「既定値に流れる」思考そのもの。③実際に誤りも確認：`scroll-behavior: smooth` を推奨しているが `prefers-reduced-motion` の但し書きがない（本資料の `motion.md` の方が正確）。**スタイル推薦部分は採らない** |
 | `NVIDIA/skills` | Apache-2.0 | **不採用。** 全290スキルを確認したが、CUDA・ロボティクス・Jetson・DOCA・医療画像・NeMo のみで、**UI/UX/Web は1件もない**。`?q=ui` の検索ヒットは "build" / "guide" 等に含まれる "ui" の誤検出 |
 | `vercel-react-best-practices` / `shadcn` / `vercel-composition-patterns` | — | **保留。** React 前提。本サイトはバニラJS方針のため現時点で対象外。`2-web-app` で React を使うなら再検討 |
@@ -217,3 +217,23 @@
 - A1 は**ダークテーマ**での測定。色数の値をライトテーマの実例と直接比較しない
 - A3 は `globals=theme:white` を明示して測定
 - **すべてサンプルデータが入った理想状態。** 実データ・権限分岐・大量行の状態は測れていない
+
+---
+
+## 原典ライセンスの確認（2026-10-13）
+
+**AI が原典のリポジトリ／ページを直接確認した結果。⚠️（人間未確認）。** 帰属表示は `NOTICE`、全文は `licenses/`。
+
+| # | 資料 | ライセンス | 確認した場所 | 本資料での扱い |
+|---|---|---|---|---|
+| 1 | Vercel WIG | MIT（© 2025 Vercel Labs） | リポジトリの `LICENSE` | 翻訳して含む → NOTICE A-1 |
+| 12 | Anthropic `frontend-design` | Apache-2.0 | `skills/frontend-design/LICENSE.txt` | 翻訳・要約して含む → NOTICE A-2 |
+| 9〜11 | web.dev / Google Search | CC BY 4.0（文章）・Apache 2.0（コード） | ページのフッター | 数値の参照 → NOTICE B |
+| 5, 6 | W3C WCAG | © 2025 W3C（Permission to Use WAI Material） | ページのフッター。**条件ページ本文は未読** | 数値の参照 → NOTICE B |
+| 本文 | MDN | CC-BY-SA の表示あり | ページ内リンク。**版は未確認** | Baseline 到達状況の参照 |
+| 7, 8, A5 | デジタル庁デザインシステム | **文章の利用条件は未確認**（見つかったのはイラスト・アイコン素材の規約のみ。コードは MIT） | design.digital.go.jp | 数値の参照にとどめる |
+| 13 | deceptive.design | © Testimonium Ltd。ライセンス表示なし | フッター | 分類名の参照にとどめる |
+| 2〜4 | NN/g | **All Rights Reserved。翻訳は有料許諾制** | `copyright-and-reprint-info` | **許諾未取得。`principles.md` 等は MIT の対象外（NOTICE C）。書き直し or リンク化を検討中** |
+
+**宿題**：①NN/g 由来の箇所（`principles.md` / `hero-cta.md` / `structure.md`）が翻訳に当たるかの本文照合
+②デジタル庁・W3C・MDN の条件ページ本文の確認 ③WIG（2026-08-18 / 10-05）と frontend-design（2026-09-03）の更新の取り込み

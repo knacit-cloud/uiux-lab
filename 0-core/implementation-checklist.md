@@ -5,6 +5,7 @@
 
 ⚠️ 出典：[Vercel Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines)（`command.md` 本文照合済・2026-07時点）
 一部に補足と日本語向けの注記を加えている。
+ライセンス：原典は MIT（© 2025 Vercel Labs）。全文と帰属は [`NOTICE`](../NOTICE) を参照。
 
 ---
 
