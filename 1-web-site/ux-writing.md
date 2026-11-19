@@ -225,7 +225,7 @@ BtoBのCTAで止まる理由はほぼ「押したら何が起きるか分から�
 - 固有名詞・ブランド名には `translate="no"`
 
 ```html
-<span translate="no">Knacit</span>
+<span translate="no">BrandName</span>
 ```
 
 ---

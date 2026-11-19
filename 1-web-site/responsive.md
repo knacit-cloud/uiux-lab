@@ -169,7 +169,7 @@ DevTools → デバイスツールバー → Responsive → 320 × 568
 ```html
 <header class="fixed inset-x-0 top-0 z-50 bg-surface/90 backdrop-blur">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-    <a href="/" class="…"><img src="/logo.png" width="120" height="32" alt="Knacit"></a>
+    <a href="/" class="…"><img src="/logo.png" width="120" height="32" alt="社名"></a>
 
     <!-- デスクトップナビ -->
     <nav class="hidden items-center gap-8 md:flex">

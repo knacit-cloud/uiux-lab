@@ -279,3 +279,23 @@
 | 33 | design-anti-slop（定型のLP順序、カードの入れ子） | https://mcpmarket.com/tools/skills/design-anti-slop | `ai-bias-check.md` C1・C5、`items.md` S3 | 🔍 |
 | 34 | wystack agent-kit — AI Slop Catalog（Hero Metric Layout） | https://cdn.jsdelivr.net/npm/@wystack/agent-kit@0.12.0/wystack-agent-kit/references/anti-patterns.md | `ai-bias-check.md` V5、`items.md` A1 | 🔍 |
 | 35 | superdesign — Why AI design looks generic（分布の収束、作りやすいものだけ作る） | https://superdesign.dev/blog/why-ai-design-looks-generic | `ai-bias-check.md` P2 | 🔍 |
+
+---
+
+## AI 研究（2026-11-20 追加）
+
+`research/findings.md` で使用。各主張の真下に R 番号と一緒に引いている。
+**⚠️ は本文照合済（AI）、🔍 は検索結果の抜粋のみ。** UI 以外の研究を UI に当てはめた箇所は本文に「外挿」と明記。
+
+| # | 資料 | URL | 使っている箇所 | 状態 |
+|---|---|---|---|---|
+| 36 | Design Creativity Bench: Measuring creativity in LLM-Generated UI（2026、最新15モデル・2,400件） | https://arxiv.org/abs/2610.11539 | R-01, R-02, R-06 | ⚠️ |
+| 37 | CrowdGenUI: Aligning LLM-Based UI Generation with Crowdsourced User Preferences | https://arxiv.org/abs/2411.03477 | R-03 | 🔍 |
+| 38 | Verbalized Sampling: How to Mitigate Mode Collapse and Unlock LLM Diversity（Stanford ほか） | https://arxiv.org/abs/2510.01171 | R-04, R-13 | 🔍 |
+| 39 | Design2Code: Benchmarking Multimodal Code Generation for Automated Front-End Engineering | https://arxiv.org/abs/2403.03163 | R-07, R-09, R-10 | 🔍 |
+| 40 | WebGen-Agent: Multi-Level Feedback and Step-Level RL（ICLR 2026） | https://arxiv.org/abs/2509.22644 | R-11 | 🔍 |
+| 41 | Vision-Guided Iterative Refinement for Frontend Code Generation（ICLR 2026 Workshop） | https://cdn.amazon.science/e2/87/68ecc1e04ecc9e2e92bcd5fd3750/scipub-approval152129-45356067-visionguided-iterative-refinement-for-frontend-code-generation.pdf | R-11 | 🔍 |
+| 42 | UICrit: Enhancing Automated Design Evaluation with a UI Critique Dataset（UIST 2024） | https://arxiv.org/abs/2407.08850 | R-14 | 🔍 |
+| 43 | Towards Human-AI Synergy in UI Design（PrototypeFlow、アブレーション） | https://arxiv.org/abs/2412.20071 | R-12 | ⚠️ |
+| 44 | Anthropic — Prompting best practices | https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices | R-08, R-15 | 🔍 |
+| 45 | Does AI Homogenize Student Thinking?（先行研究のまとめとして使用） | https://arxiv.org/abs/2603.21228 | R-05 | 🔍 |

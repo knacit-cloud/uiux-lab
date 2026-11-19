@@ -83,7 +83,7 @@
        ・画像背景は unknown（測定不能として報告する）
 
      ⚠️ background-color だけを見ると、暗いグラデーションの上の
-        明るい文字を「背景も明るい」と誤判定する（knacit.com で実際に発生）。 */
+        明るい文字を「背景も明るい」と誤判定する（実サイトで実際に発生）。 */
   function effectiveBg(el, depth) {
     depth = depth || 0;
     var node = el;

@@ -189,7 +189,7 @@ document.documentElement.scrollWidth         // 320 ← 横スクロールなし
   構造に意味を持たせる／書体を選び直す）を書いた
 - `process.md` ⑤に**2段階**を導入。計画（Color / Type / Layout / **Signature**）を先に文章で書き、
   **作る前に「誰でも同じ結論に至りそうな部分」を自分で叩く**
-- `snippets/README.md` に「あの配色は Knacit のブランド例であって推奨デフォルトではない」と明記
+- `snippets/README.md` に「あの配色は特定ブランドの例であって推奨デフォルトではない」と明記
 
 **教訓**
 **「ルールに違反していない」と「良い」は違う。**
@@ -323,7 +323,7 @@ document.documentElement.scrollWidth         // 320 ← 横スクロールなし
 
 **症状**
 `audit.js` を自分のスニペットで検証し、error 0 になったので「動く」と判断した。
-実サイト（knacit.com）に当てたところ、**11件の誤検出**が出た。
+実サイト（本人の本番サイト）に当てたところ、**11件の誤検出**が出た。
 
 **原因**
 `effectiveBg()`（背景色を祖先に遡って求める関数）が
@@ -356,7 +356,7 @@ document.documentElement.scrollWidth         // 320 ← 横スクロールなし
 そして今回は**誤検出のおかげで本物が1つ見つかった**。
 誤検出は「うるさいだけ」ではなく、**検査の前提が壊れているサイン**として扱う。
 
-→ 監査の全結果: [`references/audits/2026-08-01-knacit.md`](references/audits/2026-08-01-knacit.md)
+→ 監査の全結果: [`references/audits/2026-08-01-site-a.md`](references/audits/2026-08-01-site-a.md)
 
 ---
 

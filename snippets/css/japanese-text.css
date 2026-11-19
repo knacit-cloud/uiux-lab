@@ -134,6 +134,6 @@ input, select, textarea, button {
 }
 
 /* --- ブランド名は翻訳させない ---------------------------------------------
-   HTML 側で <span translate="no">Knacit</span> と書く。
+   HTML 側で <span translate="no">BrandName</span> と書く。
    -------------------------------------------------------------------------- */
 [translate='no'] { font-feature-settings: normal; }
