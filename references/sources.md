@@ -237,3 +237,26 @@
 
 **宿題**：①（済・2026-10-13）NN/g 由来の3ファイルを原文と照合。`principles.md` 数文・`hero-cta.md` 1か所を言い換え。`structure.md` は数値の参照のみで変更なし
 ②デジタル庁・W3C・MDN の条件ページ本文の確認 ③WIG（2026-08-18 / 10-05）と frontend-design（2026-09-03）の更新の取り込み
+
+---
+
+## 見本の渡し方・ブランド・スキル（2026-11-20 追加）
+
+`references/input-methods.md`、`4-brand/`、`references/skills.md` で使用。
+**#14・#15 だけが本文照合済 `⚠️`。#16 以降は検索結果の抜粋を読んだだけなので `🔍`。**
+`🔍` の主張は「方向性のメモ」扱い。資料の根拠として固めるときは、本文を読んで `⚠️` に上げること。
+
+| # | 資料 | URL | 使っている箇所 | 状態 |
+|---|---|---|---|---|
+| 14 | Google Labs `DESIGN.md` 仕様（2層構造・セクション順・トークン型） | https://github.com/google-labs-code/design.md | `4-brand/DESIGN.template.md`、`brand-definition.md`、`input-methods.md` | ⚠️ |
+| 15 | 同上 — lint CLI（`broken-ref` がエラー、`contrast-ratio` 等が警告、`export`） | https://github.com/google-labs-code/design.md | `4-brand/brand-definition.md` ⑥ | ⚠️ |
+| 16 | DESIGN.md Library（JSON トークンは値だけ、DESIGN.md はルールも持つ） | https://pasqualepillitteri.it/en/news/1737/design-md-library-ai-design-interfaces-2026 | `input-methods.md` | 🔍 |
+| 17 | ByteByteGo — Figma MCP（スクショは精度不足、生APIは多すぎる） | https://www.traeai.com/articles/869cf90d-4c67-43a4-a201-21147256fe9a | `input-methods.md` | 🔍 |
+| 18 | Tutorials Dojo — Claude Code の自己スクショ比較ループ | https://tutorialsdojo.com/claude-code-the-web-design-workflow-that-actually-works/ | `input-methods.md` 自己検証ループ | 🔍 |
+| 19 | Apple Newsroom — Liquid Glass（2025-06） | https://www.apple.com/newsroom/2025/06/apple-introduces-a-delightful-and-elegant-new-software-design/ | `4-brand/brand-definition.md` ネイティブの注意 | 🔍 |
+| 20 | Design Compass — Liquid Glass と Material 3 Expressive | https://designcompass.org/en/2026/09/01/why-quiet-interfaces-got-flashier/ | 同上 | 🔍 |
+| 21 | UI/UX Pro Max skill | https://github.com/nextlevelbuilder/ui-ux-pro-max-skill | `references/skills.md` | 🔍 **ライセンス未確認** |
+| 22 | Refero — MCP / Skill ドキュメント | https://doc.refero.design/ | `references/skills.md`、`input-methods.md` | 🔍 |
+| 23 | Mobbin MCP + Claude Code 手順 | https://evangelineng.substack.com/p/mobbin-mcp-claude-code-generate-prototypes | `references/skills.md` | 🔍 |
+| 24 | awesome-claude-design | https://github.com/rohitg00/awesome-claude-design | `references/skills.md` | 🔍 |
+| 25 | Anthropic — Claude Design 発表 / 見た目の均質化の指摘 | https://www.anthropic.com/news/claude-design-anthropic-labs ・ https://letsdatascience.com/news/anthropics-claude-design-shapes-new-design-aesthetic-aaf43749 | `references/skills.md` | 🔍 |
