@@ -260,3 +260,22 @@
 | 23 | Mobbin MCP + Claude Code 手順 | https://evangelineng.substack.com/p/mobbin-mcp-claude-code-generate-prototypes | `references/skills.md` | 🔍 |
 | 24 | awesome-claude-design | https://github.com/rohitg00/awesome-claude-design | `references/skills.md` | 🔍 |
 | 25 | Anthropic — Claude Design 発表 / 見た目の均質化の指摘 | https://www.anthropic.com/news/claude-design-anthropic-labs ・ https://letsdatascience.com/news/anthropics-claude-design-shapes-new-design-aesthetic-aaf43749 | `references/skills.md` | 🔍 |
+
+---
+
+## 受付（intake）と AI の偏り（2026-11-20 追加）
+
+`intake/` で使用。**すべて検索結果の抜粋を読んだだけ（🔍）。** 外部の「AI っぽさ」一覧は互いに矛盾する箇所がある（`intake/ai-bias-check.md` 冒頭）。
+
+| # | 資料 | URL | 使っている箇所 | 状態 |
+|---|---|---|---|---|
+| 26 | Adrian Krebs — Show HN 投稿の AI デザインパターン分析（書体・色・レイアウト・CSS） | https://adriankrebs.ch/blog/design-slop/ | `ai-bias-check.md` §1、`items.md` | 🔍 |
+| 27 | ux-skill wiki — AI slop の見分け方／禁止リスト（中央寄せ・3枚カード・John Doe） | https://github.com/Laith0003/ux-skill/wiki/Anti-AI-slop-ban-list | `ai-bias-check.md` §1・§2 | 🔍 |
+| 28 | open-design `discovery-question-form`（曖昧なら最小の質問の組を最初に出す） | https://tessl.io/registry/skills/github/nexu-io/open-design/discovery-question-form | `intake/README.md` ③ | 🔍 |
+| 29 | ed3d `asking-clarifying-questions`（聞く前に作業ディレクトリから自分で答える） | https://skills.sh/ed3dai/ed3d-plugins/asking-clarifying-questions | `intake/README.md` ② | 🔍 |
+| 30 | Towards AI — 10 signs of AI-generated design | https://pub.towardsai.net/10-signs-of-ai-generated-design-and-how-to-make-yours-not-look-like-it-482ff7da81fc | `ai-bias-check.md`、`items.md` | 🔍 |
+| 31 | design-for-ai `clarify`（LLM は情報が欠けていても聞かずに仮定して進む） | https://www.skills.sh/ryanthedev/design-for-ai/clarify | `intake/README.md`、`ai-bias-check.md` P1 | 🔍 |
+| 32 | Why Your AI Keeps Building the Same Purple Gradient Website（Tailwind UI の indigo の件） | https://prg.sh/ramblings/Why-Your-AI-Keeps-Building-the-Same-Purple-Gradient-Website | `ai-bias-check.md` V2 | 🔍 |
+| 33 | design-anti-slop（定型のLP順序、カードの入れ子） | https://mcpmarket.com/tools/skills/design-anti-slop | `ai-bias-check.md` C1・C5、`items.md` S3 | 🔍 |
+| 34 | wystack agent-kit — AI Slop Catalog（Hero Metric Layout） | https://cdn.jsdelivr.net/npm/@wystack/agent-kit@0.12.0/wystack-agent-kit/references/anti-patterns.md | `ai-bias-check.md` V5、`items.md` A1 | 🔍 |
+| 35 | superdesign — Why AI design looks generic（分布の収束、作りやすいものだけ作る） | https://superdesign.dev/blog/why-ai-design-looks-generic | `ai-bias-check.md` P2 | 🔍 |

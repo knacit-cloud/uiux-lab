@@ -35,6 +35,7 @@
 | 詰まって見える・安っぽい | 余白が足りない。セクション上下 `py-28` | [visual-design §3](1-web-site/visual-design.md) |
 | 平坦で目が滑る | 視覚的階層がない。**一番目立つものが1つに絞れていない** | [visual-design §2](1-web-site/visual-design.md) |
 | **どこかで見たことがある** | **AIデフォルトの3つの型に入っている** | [visual-design §0](1-web-site/visual-design.md) |
+| AIが作った感がある（型以外も） | 外部で指摘されている偏りに当たっている | [intake/ai-bias-check](intake/ai-bias-check.md) |
 | 文字が読みにくい | 行間・行長・コントラストのどれか | [typography](0-core/typography.md) |
 | 日本語が窮屈 | 欧文向けの `line-height: 1.5` をそのまま使っている | [typography](0-core/typography.md) |
 | 英数字が不格好 | `font-family` の順序。**欧文を先に書く** | [typography](0-core/typography.md) |
